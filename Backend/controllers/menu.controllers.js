@@ -11,7 +11,7 @@ const createMenu = async function (req,res){
         const uploadedFile = req.files && req.files.length > 0 ? req.files[0].filename : null
         const userId = req.data?._id || req.data?.id
 
-        const Create = await menu.create({
+        const createMenu = await menu.create({
             category,
             name,
             description,
@@ -19,8 +19,8 @@ const createMenu = async function (req,res){
             image: uploadedFile,
             userId
         })
-        await Create.populate('userId', 'name role').sort({ createdAt: -1 })
-        res.status(201).json({ msg: "Menu item created successfully", createMenu: Create })
+        await createMenu.populate('userId', 'name role')
+        res.status(201).json({ msg: "Menu item created successfully", createMenu: createMenu })
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: err.message })

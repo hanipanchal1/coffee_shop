@@ -2,6 +2,7 @@ import React from 'react'
 import { IoLocationOutline } from "react-icons/io5";
 import { BiPhoneCall } from "react-icons/bi";
 import { MdOutlineEmail } from "react-icons/md";
+import Footer from '../componets/Footer'
 
 const Contact = () => {
   return (
@@ -17,7 +18,8 @@ const Contact = () => {
         </h1>
         <p className="text-[#b9b8b8] text-md">Home/Contact</p>
       </div>
-      <div className="flex px-25 gap-25 mt-30 mb-25">
+        <div className="px-25">
+      <div className="flex gap-25 mt-30 mb-25">
         <div className="">
           <div className="flex flex-col gap-5">
             <h1 className="text-[#c5a572] font-sans">CONTACT US</h1>
@@ -57,6 +59,32 @@ const Contact = () => {
     </section>
         </div>
       </div>
+
+      <div className=" bg-[#f4eee4] w-full f-autho py-20 flex flex-col gap-10">
+        <div className="flex flex-col justify-center items-center gap-3">
+            <p className='text-[#c5a572] font-sans text-3xl'>SEND A MESSAGE</p>
+            <h2 className=" font-serif text-center">Do you have anything in your mind to tell us? please don't hesitate to <br />get in touch to us via our contact form.</h2>
+        </div>
+        <div className="flex justify-center ">
+        <form className='flex flex-col gap-10 px-20' action="">
+          <div className="flex gap-15 px-50">
+          <input className='border-b w-[25vw]' type="text" placeholder='Name*'/>
+          <input className='border-b w-[25vw]' type="text" placeholder='E-mail*'/>
+          </div>
+          <div className="flex gap-15 px-50 ">
+          <input className='border-b w-[25vw]' type="text" placeholder='Phone*'/>
+          <input className='border-b w-[25vw]' type="text" placeholder='Subject*'/>
+          </div>
+          <div className="px-50 flex flex-col gap-8 justify-center items-center">
+          <input className='border-b w-full' type="text" placeholder='Notes'/>
+          <button className="border text-zxl w-35 px-3 py-2 border-[#121D27] bg-[#121D27] text-[white] hover:bg-[white] hover:text-[#121D27] transition-all duration-300">Send Message</button>
+          </div>
+        </form>
+        </div>
+        </div>
+      </div>
+
+      <Footer/>
     </div>
   )
 }

@@ -9,6 +9,7 @@ import Contact from './Contact'
 import Services from './Services'
 import BDetails from './BDetails'
 import Error from './Error'
+import Login from './Login'
 
 
 const Main = () => {
@@ -24,6 +25,7 @@ const Main = () => {
         <Route path='/service' element={<Services/>}/>
         <Route path='/blog/detail' element={<BDetails/>}/>
         <Route path='*' element={<Error/>}/>
+        <Route path='*' element={<Login/>}/>
       </Routes>
     </div>
   )

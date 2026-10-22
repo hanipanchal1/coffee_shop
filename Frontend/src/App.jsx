@@ -9,6 +9,7 @@ import Contact from "./pages/Contact";
 import Services from "./pages/Services";
 import BDetails from "./pages/BDetails";
 import Error from "./pages/Error";
+import Login from "./pages/Login";
 import Nav from "./componets/Nav";
 import Team from "./componets/Team";
 
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/service" element={<Services />} />
         <Route path="/blog/detail" element={<BDetails />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </div>

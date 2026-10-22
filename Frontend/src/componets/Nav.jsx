@@ -6,6 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa";
 import { BiSolidPhoneCall } from "react-icons/bi";
 import { MdEmail } from "react-icons/md";
+import { MdOutlineLogin } from "react-icons/md";
 
 const Nav = () => {
   return (
@@ -26,13 +27,14 @@ const Nav = () => {
         <div className="w-35">
           <img src="../src/assets/img/cafelogo.svg" alt="error" />
         </div>
-        <div className="text-[15px] flex gap-15 ">
+        <div className="text-[15px] flex gap-15 items-center">
           <Link className='hover:border-b-2 hover:border-[#c5a572]' to={'/'}>Home</Link>
           <Link className='hover:border-b-2 hover:border-[#c5a572]' to={'/Menu'}>Menu</Link>
           <Link className='hover:border-b-2 hover:border-[#c5a572]' to={'/About'}>About</Link>
           <Link className='hover:border-b-2 hover:border-[#c5a572]' to={'/Gallery'}>Gallery</Link>
           <Link className='hover:border-b-2 hover:border-[#c5a572]' to={'/Service'}>Service</Link>
           <Link className='hover:border-b-2 hover:border-[#c5a572]' to={'/Contact'}>Contact</Link>
+          <Link className='hover:border-b-2 hover:border-[#c5a572] text-xl' to={'/Login'}><MdOutlineLogin /></Link>
         </div>
       </div>
     </div>
