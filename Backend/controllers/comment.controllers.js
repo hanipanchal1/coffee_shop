@@ -3,7 +3,9 @@ const menu = require('../models/menu')
 
 const createComment = async function(req,res){
     try{
-        const {comments,name,email}=req.body
+        const comments = req.body.comments || req.body.Comment || req.body.comment
+        const name = req.body.name || req.body.Name
+        const email = req.body.email || req.body.Email
         
         if (!comments || !name || !email ) {
             return res.status(400).json({ msg: "All fields are required" })
@@ -17,7 +19,9 @@ const createComment = async function(req,res){
             email,
             userId
         })
-        await Create.populate('userId', 'name role').sort({ createdAt: -1 })
+        if (userId) {
+            await Create.populate('userId', 'name role')
+        }
         res.status(201).json({msg: "Comment created successfully",createComment:Create})
     }catch (err) {
         console.error(err)

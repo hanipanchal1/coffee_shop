@@ -1,11 +1,57 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoSearchOutline } from "react-icons/io5";
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import Footer from '../componets/Footer';
+import axios from 'axios'
+
 const BDetails = () => {
+  const [Comment, setcomment] = useState('')
+  const [Name, setname] = useState('')
+  const [Email, setemail] = useState('')
+  const [commentsList, setCommentsList] = useState([])
+
+  useEffect(() => {
+    fetchComments()
+  }, [])
+
+  async function fetchComments() {
+    try {
+      const res = await axios.get('http://localhost:1000/comment/read')
+      setCommentsList(res.data.readComment || [])
+    } catch (err) {
+      console.error("Error fetching comments:", err)
+    }
+  }
+
+  async function commentf(e){
+    e.preventDefault();
+    if (!Comment || !Name || !Email) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    try {
+      const res = await axios.post('http://localhost:1000/comment/create', {
+        comments: Comment,
+        name: Name,
+        email: Email
+      })
+      alert(res.data.msg || 'Comment posted successfully!')
+      setcomment('')
+      setname('')
+      setemail('')
+      fetchComments()
+    } catch (error) {
+      console.error("Error:", error)
+      const errorMsg =
+        error.response?.data?.msg ||
+        error.response?.data?.message ||
+        'Failed to post comment.'
+      alert(errorMsg)
+    }
+  }
   return (
     <div>
       <div
@@ -55,19 +101,36 @@ const BDetails = () => {
           </div>
 
           <div className="mt-10 flex flex-col gap-5">
-            <p className='text-5xl font-serif mb-10'>2 Comments</p>
-            <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
-              <h1 className='text-4xl font-serif'>Emilie D'Amore</h1>
-              <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
-              <p className='text-[#646464] text-[18px]'>Praesentium et odit commodi dolores possimus quisquam <br />expedita ipsum.Voluptas vel vero oficia alias ut.</p>
-            </div>
-            <div className="ml-10 w-[55vw]">
-            <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
-              <h1 className='text-4xl font-serif'>Katheryn Kerluke</h1>
-              <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
-              <p className='text-[#646464] text-[18px]'>Sed quo quod aut saepe. Occaecati nobis sit et quia quia impedit debitis culpa. Modi ab omnis nulla.</p>
-            </div>
-            </div>
+            <p className='text-5xl font-serif mb-10'>
+              {commentsList.length > 0 ? `${commentsList.length} Comment${commentsList.length > 1 ? 's' : ''}` : '2 Comments'}
+            </p>
+
+            {commentsList.length > 0 ? (
+              commentsList.map((c, index) => (
+                <div key={c._id || index} className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
+                  <h1 className='text-4xl font-serif'>{c.name}</h1>
+                  <h1 className='text-[#646464] text-[14px]'>
+                    {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Recent'}
+                  </h1>
+                  <p className='text-[#646464] text-[18px]'>{c.comments}</p>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
+                  <h1 className='text-4xl font-serif'>Emilie D'Amore</h1>
+                  <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
+                  <p className='text-[#646464] text-[18px]'>Praesentium et odit commodi dolores possimus quisquam <br />expedita ipsum.Voluptas vel vero oficia alias ut.</p>
+                </div>
+                <div className="ml-10 w-[55vw]">
+                  <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
+                    <h1 className='text-4xl font-serif'>Katheryn Kerluke</h1>
+                    <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
+                    <p className='text-[#646464] text-[18px]'>Sed quo quod aut saepe. Occaecati nobis sit et quia quia impedit debitis culpa. Modi ab omnis nulla.</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="mt-25">
@@ -76,13 +139,13 @@ const BDetails = () => {
               <p className='text-[#646464] text-[18px]'>Your email address will not be published.</p>
             </div>
             <div className="py-10">
-              <form action="Comments">
-                <input type="text" className='w-[55vw] text-xl py-3 border-b border-[#c7c4c4] outline-none'  placeholder='Comments'/>
+              <form action="Comments" onSubmit={commentf}>
+                <input type="text" className='w-[55vw] text-xl py-3 border-b border-[#c7c4c4] outline-none'  placeholder='Comments' value={Comment} onChange={(e)=>setcomment(e.target.value)}/>
                 <div className="flex gap-10">
-                  <input type="text" className='w-[26vw] text-xl py-3 border-b border-[#c7c4c4] outline-none' placeholder='Name*'/>
-                  <input type="text" className='w-[26vw] text-xl py-3 border-b border-[#c7c4c4] outline-none' placeholder='E-mail*'/>
+                  <input type="text" className='w-[26vw] text-xl py-3 border-b border-[#c7c4c4] outline-none' placeholder='Name*' value={Name} onChange={(e)=>setname(e.target.value)}/>
+                  <input type="text" className='w-[26vw] text-xl py-3 border-b border-[#c7c4c4] outline-none' placeholder='E-mail*' value={Email} onChange={(e)=>setemail(e.target.value)}/>
                 </div>
-          <button className="border text-zxl w-35 px-3 py-2 mt-10 border-[#121D27] bg-[#121D27] text-[white] hover:bg-[white] hover:text-[#121D27] transition-all duration-300">Post Comments</button>
+          <button type="submit" className="border text-zxl w-35 px-3 py-2 mt-10 border-[#121D27] bg-[#121D27] text-[white] hover:bg-[white] hover:text-[#121D27] transition-all duration-300">Post Comments</button>
               </form>
             </div>
           </div>

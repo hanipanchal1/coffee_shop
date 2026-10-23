@@ -10,6 +10,8 @@ import Services from './Services'
 import BDetails from './BDetails'
 import Error from './Error'
 import Login from './Login'
+import Register from './Register'
+import Admin from './Admin'
 
 
 const Main = () => {
@@ -24,8 +26,10 @@ const Main = () => {
         <Route path='/contact' element={<Contact/>}/>
         <Route path='/service' element={<Services/>}/>
         <Route path='/blog/detail' element={<BDetails/>}/>
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/register' element={<Register/>}/>
+        <Route path='/admin' element={<Admin/>}/>
         <Route path='*' element={<Error/>}/>
-        <Route path='*' element={<Login/>}/>
       </Routes>
     </div>
   )

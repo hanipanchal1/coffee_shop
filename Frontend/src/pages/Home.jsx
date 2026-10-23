@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Team from "../componets/Team";
 import Gallery from "../componets/Gallery";
 import Footer from "../componets/Footer";
 import MenuCard from "../componets/MenuCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import drinksImg from "../assets/img/drinks.png";
-import dinnerImg from "../assets/img/dinner.png";
-import lunchImg from "../assets/img/lunch.png";
+import dinnerImg from "../assets/img/gallery/g4.png";
+import lunchImg from "../assets/img/G1.png";
+import breakfastImg from "../assets/img/sp3.png";
 
 const Home = () => {
   const [name, setName] = useState("");
@@ -17,6 +17,28 @@ const Home = () => {
   const [time, setTime] = useState("");
   const [seats, setSeats] = useState("");
   const [notes, setNotes] = useState("");
+  const [menu, setMenu] = useState([]);
+
+  useEffect(() => {
+    getmenu();
+  }, []);
+
+  // ✅ React state updates are asynchronous!
+  // To see the updated state, watch it with a useEffect:
+  useEffect(() => {
+    console.log("Updated menu state:", menu);
+  }, [menu]);
+
+  async function getmenu() {
+    try {
+      const response = await axios.get("http://localhost:1000/menu/read");
+      const fetchedMenu = response.data.readMenu || [];
+      setMenu(fetchedMenu);
+      console.log("Response from backend:", fetchedMenu);
+    } catch (error) {
+      console.error("Error fetching menu:", error);
+    }
+  }
 
   async function booking(e) {
     e.preventDefault();
@@ -45,6 +67,7 @@ const Home = () => {
       setTime("");
       setSeats("");
       setNotes("");
+      getmenu()
     } catch (err) {
       console.error(err);
       const errorMessage =
@@ -57,44 +80,47 @@ const Home = () => {
 
   const navigate = useNavigate();
 
+  // ─────────────────────────────────────────────────────────────
+  //  Special Menus Configuration
+  //  - Links category names to background images & titles
+  //  - Food items are dynamically loaded from MongoDB API (menu state)
+  //  - Fallback items display if database has no items for that category yet
+  // ─────────────────────────────────────────────────────────────
   const specialMenus = [
     {
-      title: "DRINKS",
-      bgImage: drinksImg,
-      items: [
-        "Beer",
-        "Coffee",
-        "Ice Tea",
-        "Juice",
-        "MilkTea",
-        "Smoothie",
-        "Soft Drink",
+      category: "breakfast",
+      title: "BREAKFAST",
+      bgImage: breakfastImg,
+      fallback: [
+        "Pancake Stack",
+        "Avocado Toast",
+        "Eggs Benedict",
+        "French Toast",
+        "Fruit Bowl",
       ],
     },
     {
-      title: "DINNER",
-      bgImage: dinnerImg,
-      items: [
-        "Appetizers",
-        "Bruschetta",
-        "Chicken",
-        "Rice & Flesh",
-        "Seafood",
-        "Sides",
-        "Veal & Beef",
-      ],
-    },
-    {
+      category: "lunch",
       title: "LUNCH",
       bgImage: lunchImg,
-      items: [
-        "Appetizers",
-        "Cakes",
-        "Fire It Up",
-        "Pastas",
-        "Salads",
-        "Sandwiches",
-        "Soups",
+      fallback: [
+        "Club Sandwich",
+        "Caesar Salad",
+        "Pasta Primavera",
+        "Tomato Basil Soup",
+        "Grilled Burger",
+      ],
+    },
+    {
+      category: "dinner",
+      title: "DINNER",
+      bgImage: dinnerImg,
+      fallback: [
+        "Ribeye Steak",
+        "Grilled Salmon",
+        "Chicken Marsala",
+        "Mushroom Risotto",
+        "Seafood Platter",
       ],
     },
   ];
@@ -256,16 +282,30 @@ const Home = () => {
             </p>
           </div>
         </div>
-        <div className="flex gap-10 justify-center items-center mt-10">
-          {specialMenus.map((menu, index) => (
-            <MenuCard
-              key={index}
-              title={menu.title}
-              bgImage={menu.bgImage}
-              items={menu.items}
-              onExplore={() => navigate("/menu")}
-            />
-          ))}
+        <div className="flex flex-wrap gap-10 justify-center items-center mt-10">
+          {specialMenus.map((special, index) => {
+            // Find items from MongoDB API matching this category (case-insensitive)
+            const dbItems = menu
+              .filter(
+                (item) =>
+                  item.category &&
+                  item.category.trim().toLowerCase() === special.category.toLowerCase()
+              )
+              .map((item) => item.name);
+
+            // Use database items if available; otherwise show fallback items
+            const cardItems = dbItems.length > 0 ? dbItems : special.fallback;
+
+            return (
+              <MenuCard
+                key={index}
+                title={special.title}
+                bgImage={special.bgImage}
+                items={cardItems}
+                onExplore={() => navigate("/menu")}
+              />
+            );
+          })}
         </div>
       </div>
 

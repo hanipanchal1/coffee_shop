@@ -69,7 +69,7 @@ const Gallery = () => {
         </div>
       </div>
 
-      <button className='border border-[#c5a572] text-[#c5a572] px-5 py-2 mt-15'>View More</button>
+      {/* <button className='border border-[#c5a572] text-[#c5a572] px-5 py-2 mt-15'>View More</button> */}
     </div>
     <Footer/>
     </>

@@ -19,8 +19,13 @@ passport.use(new GoogleStrategy({
             google: profile.id,
             name: profile.displayName,
             email: email,
-            avatar: avatar
+            avatar: avatar,
+            role: 'user'
           })
+        } else if (!user.google) {
+          user.google = profile.id
+          if (!user.avatar) user.avatar = avatar
+          await user.save()
         }
         return cb(null, user)
     }
