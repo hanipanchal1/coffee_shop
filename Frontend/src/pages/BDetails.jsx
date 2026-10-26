@@ -84,7 +84,7 @@ const BDetails = () => {
             <p className="font-sans text-[20px] text-gray-600">Aut rem rerum at fugiat. Dolores numquam ipsam corporis. Enim et fugit eligendi. Blanditiis harum non eaque aspernatur. Mollitia et distinctio voluptatem error hic numquam ea sunt aut. Pariatur non similique et.Et iure enim dolore. Aspernatur soluta neque mollitia quia accusantium provident non explicabo quia. Praesentium et odit commodi dolores possimus quisquam expedita ipsum.Voluptas vel vero officia alias ut. Assumenda nihil est consequatur nesciunt cupiditate eum in libero dolor. Soluta odio voluptatem dolores molestiae dolorem nesciunt. Aspernatur similique repellendus beatae.Repellendus recusandae voluptate reiciendis sequi alias eos. Quasi enim ratione voluptates a unde sint provident eveniet omnis. Esse illo qui aut alias hic enim.</p>
           </div>
 
-          <div className="border flex gap-7 border-[#c5a572] px-10 py-10">
+          <div className="border flex gap-7 border-[#c5a572] mt-15 px-10 py-10">
             <div className="">
               <img className='w-40 h-35 bg-center bg-cover ' src="../src/assets/img/team3.png" alt="error" />
             </div>
@@ -117,7 +117,7 @@ const BDetails = () => {
               ))
             ) : (
               <>
-                <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
+                {/* <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
                   <h1 className='text-4xl font-serif'>Emilie D'Amore</h1>
                   <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
                   <p className='text-[#646464] text-[18px]'>Praesentium et odit commodi dolores possimus quisquam <br />expedita ipsum.Voluptas vel vero oficia alias ut.</p>
@@ -128,7 +128,8 @@ const BDetails = () => {
                     <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
                     <p className='text-[#646464] text-[18px]'>Sed quo quod aut saepe. Occaecati nobis sit et quia quia impedit debitis culpa. Modi ab omnis nulla.</p>
                   </div>
-                </div>
+                </div> */}
+                <p className="font-serif text-3xl text-[#121D27]">No Comments</p>
               </>
             )}
           </div>

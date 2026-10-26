@@ -13,6 +13,7 @@ const bookingRoutes = require('./routes/booking.routes')
 const commentRoutes = require('./routes/comment.routes')
 const blogRoutes = require('./routes/blog.routes')
 const google = require('./routes/google.routes')
+const adminRoutes = require('./routes/admin.routes')
 
 connect()
 
@@ -29,6 +30,7 @@ app.use('/menu',menuRoutes)
 app.use('/booking',bookingRoutes)
 app.use('/comment',commentRoutes)
 app.use('/blog',blogRoutes)
+app.use('/admin',adminRoutes)
 app.use('/',google)
 
 app.listen(process.env.PORT,() => {
