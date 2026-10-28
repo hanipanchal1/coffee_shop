@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const{createMenu,readMenu,updateMenu,deleteMenu} = require('../controllers/menu.controllers')
+const { createMenu, readMenu, getMenuById, updateMenu, deleteMenu } = require('../controllers/menu.controllers')
 const auth = require('../middlware/auth')
 const admin = require('../middlware/admin')
 
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/read', readMenu)
-
+router.get('/read/:id', getMenuById)
 router.post('/create', auth, admin, upload.any(), createMenu)
 router.put('/update/:id', auth, admin, upload.any(), updateMenu)
 router.delete('/delete/:id', auth, admin, deleteMenu)

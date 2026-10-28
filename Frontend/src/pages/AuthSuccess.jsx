@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "../utils/toast";
 
 // ─────────────────────────────────────────────────────────────
 //  AuthSuccess Page
@@ -30,7 +31,7 @@ const AuthSuccess = () => {
 
     if (!token) {
       // No token in URL → something went wrong
-      alert("Google login failed. Please try again.");
+      toast.error("Google login failed. Please try again.");
       navigate("/login", { replace: true });
       return;
     }
@@ -43,7 +44,7 @@ const AuthSuccess = () => {
     try {
       const base64Payload = token.split(".")[1];
       const payload = JSON.parse(
-        atob(base64Payload.replace(/-/g, "+").replace(/_/g, "/"))
+        atob(base64Payload.replace(/-/g, "+").replace(/_/g, "/")),
       );
 
       if (payload.role === "admin") {

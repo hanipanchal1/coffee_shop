@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import AuthSuccess from "./pages/AuthSuccess";
 import Nav from "./componets/Nav";
 import ProtectedRoute from "./componets/ProtectedRoute";
+import ToastNotification from "./componets/ToastNotification";
 
 // ─────────────────────────────────────────────────────────────
 //  App  –  All routes defined here
@@ -27,6 +28,7 @@ import ProtectedRoute from "./componets/ProtectedRoute";
 const App = () => {
   return (
     <div>
+      <ToastNotification />
       <Nav />
       <Routes>
         {/* ── Public Routes ── */}

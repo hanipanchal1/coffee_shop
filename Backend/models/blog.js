@@ -1,25 +1,28 @@
 const mongoose = require('mongoose')
 
-const blog = mongoose.Schema({
-    image:{
-        type:String
+const blogSchema = mongoose.Schema({
+    image: {
+        type: String,
+        default: null
     },
-    date:{
-        type:Date,
+    date: {
+        type: Date,
         default: Date.now
     },
-    title:{
-        type:String,
-        required:true
+    title: {
+        type: String,
+        required: [true, "Blog title is required"],
+        trim: true
     },
-    description:{
-        type:String,
-        required:true
+    description: {
+        type: String,
+        required: [true, "Blog description is required"],
+        trim: true
     },
-    userId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"users"
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
     }
-},{timestamps:true})
+}, { timestamps: true })
 
-module.exports = mongoose.model('blog',blog)
+module.exports = mongoose.model('blog', blogSchema)

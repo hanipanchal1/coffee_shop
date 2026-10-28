@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaGoogle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "../utils/toast";
 
 // ─────────────────────────────────────────────────────────────
 //  Login Page  –  Manual (email/password) + Google OAuth
@@ -34,7 +35,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please fill in all fields.");
+      toast.warning("Please fill in all fields.");
       return;
     }
 
@@ -50,7 +51,7 @@ const Login = () => {
       // ✅ Save token in localStorage + set global user state
       login(token, user);
 
-      alert(res.data.msg || "Logged in successfully!");
+      toast.success(res.data.msg || "Logged in successfully!");
 
       // ✅ Role-based redirect
       if (user?.role === "admin") {
@@ -67,7 +68,7 @@ const Login = () => {
         err.response?.data?.message ||
         err.response?.data?.msg ||
         "Login failed. Please check your credentials.";
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

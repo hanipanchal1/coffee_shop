@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import dinnerImg from "../assets/img/gallery/g4.png";
 import lunchImg from "../assets/img/G1.png";
 import breakfastImg from "../assets/img/sp3.png";
+import { toast } from "../utils/toast";
 
 const Home = () => {
   const [name, setName] = useState("");
@@ -44,7 +45,7 @@ const Home = () => {
     e.preventDefault();
 
     if (!name || !email || !phone || !date || !time || !seats || !notes) {
-      alert("Please fill in all fields.");
+      toast.warning("Please fill in all fields.");
       return;
     }
 
@@ -59,7 +60,7 @@ const Home = () => {
         notes,
       });
 
-      alert(res.data.msg || "Booking created successfully!");
+      toast.success(res.data.msg || "Booking created successfully!");
       setName("");
       setEmail("");
       setPhone("");
@@ -67,14 +68,14 @@ const Home = () => {
       setTime("");
       setSeats("");
       setNotes("");
-      getmenu()
+      getmenu();
     } catch (err) {
       console.error(err);
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data?.msg ||
         "Failed to submit booking.";
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
   }
 
@@ -289,7 +290,8 @@ const Home = () => {
               .filter(
                 (item) =>
                   item.category &&
-                  item.category.trim().toLowerCase() === special.category.toLowerCase()
+                  item.category.trim().toLowerCase() ===
+                    special.category.toLowerCase(),
               )
               .map((item) => item.name);
 

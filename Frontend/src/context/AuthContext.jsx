@@ -65,12 +65,12 @@ export function AuthProvider({ children }) {
   }
 
   const value = {
-    user,        // full user object
-    token,       // raw JWT string
-    login,       // function(token, userData?)
-    logout,      // function()
-    isLoggedIn: !!user,         // true / false
-    isAdmin: user?.role === "admin",  // true / false
+    user, // full user object
+    token, // raw JWT string
+    login, // function(token, userData?)
+    logout, // function()
+    isLoggedIn: !!user, // true / false
+    isAdmin: user?.role === "admin", // true / false
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
