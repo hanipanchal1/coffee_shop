@@ -57,6 +57,18 @@ export function AuthProvider({ children }) {
     setUser(decoded ? { ...decoded, ...userData } : userData);
   }
 
+  // Call this after updating user details (e.g. name or role)
+  function updateUser(updatedUser, newToken = null) {
+    if (newToken) {
+      localStorage.setItem("token", newToken);
+      setToken(newToken);
+      const decoded = decodeToken(newToken);
+      setUser(decoded ? { ...decoded, ...updatedUser } : updatedUser);
+    } else {
+      setUser((prev) => (prev ? { ...prev, ...updatedUser } : updatedUser));
+    }
+  }
+
   // Call this to log out from anywhere in the app
   function logout() {
     localStorage.removeItem("token");
@@ -69,6 +81,7 @@ export function AuthProvider({ children }) {
     token, // raw JWT string
     login, // function(token, userData?)
     logout, // function()
+    updateUser, // function(updatedUser, newToken?)
     isLoggedIn: !!user, // true / false
     isAdmin: user?.role === "admin", // true / false
   };

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Footer from "../componets/Footer";
+import { useNavigate } from "react-router-dom";
 
 import img1 from "../assets/img/blog/blogimg3.png";
 import img2 from "../assets/img/blog/blogimg10.png";
@@ -14,8 +15,24 @@ import img10 from "../assets/img/blog/blogimg7.png";
 import img11 from "../assets/img/blog/blogimg1.png";
 import img12 from "../assets/img/blog/blogimg8.png";
 import BlogCard from "../componets/BlogCard";
+import axios from "axios";
 
 const Blog = () => {
+  const navigate = useNavigate();
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  async function fetchBlogs() {
+    try {
+      const res = await axios.get("http://localhost:1000/blog/read");
+      setBlogs(res.data.readBlog || res.data.blogs || []);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    }
+  }
   const data = [
     {
       img: img1,
@@ -127,16 +144,31 @@ const Blog = () => {
             <li className="hover:border-b-2">Latest News</li>
           </ul>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 ">
-          {data.map((item, index) => (
-            <BlogCard
-              key={index}
-              img={item.img}
-              date={item.date}
-              title={item.title}
-              description={item.description}
-            />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {(blogs && blogs.length > 0 ? blogs : data).map((item, index) => {
+            const blogImage = item.image
+              ? item.image.startsWith("http")
+                ? item.image
+                : `http://localhost:1000/uploads/${item.image}`
+              : item.img || img1;
+
+            const blogDate = item.date
+              ? typeof item.date === "string" && item.date.includes("~")
+                ? item.date
+                : `${new Date(item.date).toLocaleDateString()} ~ Food`
+              : "21-04-2020 ~ Food";
+
+            return (
+              <BlogCard
+                key={item._id || index}
+                img={blogImage}
+                date={blogDate}
+                title={item.title}
+                description={item.description}
+                onExplore={() => navigate("/blog/detail")}
+              />
+            );
+          })}
         </div>
       </div>
       <Footer />

@@ -26,13 +26,14 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { PiExport } from "react-icons/pi";
 import { IoSearch } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
+import DeleteConfirmModal from "../componets/DeleteConfirmModal";
 
 // ─────────────────────────────────────────────────────────────
 //  Admin Page – Only accessible to users with role='admin'
 // ─────────────────────────────────────────────────────────────
 
 const Admin = () => {
-  const { user, token, logout } = useAuth();
+  const { user, token, logout, updateUser: updateAuthUser } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -47,9 +48,123 @@ const Admin = () => {
   const [recentBookings, setRecentBookings] = useState([]);
   const [recentComments, setRecentComments] = useState([]);
   const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
+  const [settingForm, setSettingForm] = useState({
+    name: "",
+    role: "admin",
+  });
+  const [settingLoading, setSettingLoading] = useState(false);
+
+  // Sync settingForm with currently logged-in user
+  useEffect(() => {
+    if (user) {
+      setSettingForm({
+        name: user.name || "",
+        role: user.role || "admin",
+      });
+    }
+  }, [user, isSettingModalOpen]);
 
   // Tab-specific detailed lists
   const [usersList, setUsersList] = useState([]);
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editUserForm, setEditUserForm] = useState({
+    name: "",
+    role: "user",
+  });
+  const [editUserLoading, setEditUserLoading] = useState(false);
+
+  // ── Unified Custom Delete Confirmation Modal State ──
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    type: null, // "user" | "menu" | "blog" | "booking" | "comment"
+    id: null,
+    title: "Confirm Deletion",
+    message: "Are you sure you want to delete this item?",
+    itemName: "",
+    loading: false,
+  });
+
+  function confirmDelete(type, id, itemName, title, message) {
+    setDeleteModal({
+      isOpen: true,
+      type,
+      id,
+      itemName: itemName || "",
+      title: title || "Confirm Deletion",
+      message:
+        message ||
+        "Are you sure you want to delete this item? This action cannot be undone.",
+      loading: false,
+    });
+  }
+
+  async function handleExecuteDelete() {
+    const { type, id } = deleteModal;
+    if (!type || !id) return;
+
+    setDeleteModal((prev) => ({ ...prev, loading: true }));
+    try {
+      if (type === "user") {
+        await axios.delete(`http://localhost:1000/admin/users/${id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        });
+        toast.success("User deleted successfully!");
+        fetchTabData("users");
+        fetchDashboardStats();
+      } else if (type === "menu") {
+        await axios.delete(`http://localhost:1000/menu/delete/${id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        });
+        toast.success("Menu item deleted successfully!");
+        fetchTabData("menu");
+        fetchDashboardStats();
+      } else if (type === "blog") {
+        await axios.delete(`http://localhost:1000/blog/delete/${id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        });
+        toast.success("Blog post deleted successfully!");
+        fetchTabData("blog");
+        fetchDashboardStats();
+      } else if (type === "booking") {
+        await axios.delete(`http://localhost:1000/booking/delete/${id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        });
+        toast.success("Booking deleted successfully!");
+        fetchTabData("bookings");
+        fetchDashboardStats();
+      } else if (type === "comment") {
+        await axios.delete(`http://localhost:1000/comment/delete/${id}`, {
+          withCredentials: true,
+        });
+        toast.success("Comment deleted successfully!");
+        fetchTabData("comments");
+        fetchDashboardStats();
+      }
+
+      setDeleteModal({
+        isOpen: false,
+        type: null,
+        id: null,
+        title: "",
+        message: "",
+        itemName: "",
+        loading: false,
+      });
+    } catch (err) {
+      toast.error(
+        "Failed to delete: " +
+          (err.response?.data?.msg ||
+            err.response?.data?.message ||
+            err.message),
+      );
+      setDeleteModal((prev) => ({ ...prev, loading: false }));
+    }
+  }
   const [bookingsList, setBookingsList] = useState([]);
   const [commentsList, setCommentsList] = useState([]);
   const [menuList, setMenuList] = useState([]);
@@ -320,20 +435,133 @@ const Admin = () => {
     }
   }
 
-  async function handleDeleteUser(id) {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+  function handleDeleteUser(userOrId, name = "") {
+    const id = typeof userOrId === "object" ? userOrId?._id : userOrId;
+    const displayName =
+      typeof userOrId === "object"
+        ? userOrId?.name || userOrId?.email || ""
+        : name;
+    confirmDelete(
+      "user",
+      id,
+      displayName,
+      "Delete User",
+      "Are you sure you want to delete this user? Their account and access will be permanently removed.",
+    );
+  }
+
+  // ── Settings / Admin Profile Update Handler (Name & Role only) ──
+  async function handleUpdateSettings(e) {
+    e.preventDefault();
+    if (!settingForm.name.trim()) {
+      toast.warning("Name cannot be empty.");
+      return;
+    }
+
+    setSettingLoading(true);
     try {
-      await axios.delete(`http://localhost:1000/admin/users/${id}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        withCredentials: true,
-      });
-      toast.success("User deleted successfully!");
+      const res = await axios.put(
+        "http://localhost:1000/admin/settings",
+        {
+          name: settingForm.name.trim(),
+          role: settingForm.role,
+        },
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        },
+      );
+
+      toast.success(res.data?.msg || "Settings updated successfully!");
+
+      if (res.data?.user) {
+        updateAuthUser(res.data.user, res.data.token);
+      }
+
+      if (settingForm.role !== "admin") {
+        toast.info("Role updated to User. Redirecting to home...");
+        setIsSettingModalOpen(false);
+        navigate("/");
+        return;
+      }
+
+      setIsSettingModalOpen(false);
       fetchTabData("users");
-      fetchDashboardStats();
     } catch (err) {
       toast.error(
-        "Failed to delete user: " + (err.response?.data?.msg || err.message),
+        "Failed to update settings: " +
+          (err.response?.data?.msg ||
+            err.response?.data?.message ||
+            err.message),
       );
+    } finally {
+      setSettingLoading(false);
+    }
+  }
+
+  // ── Edit Specific User (Name & Role only) ──
+  function handleOpenEditUser(u) {
+    setEditingUser(u);
+    setEditUserForm({
+      name: u.name || "",
+      role: u.role || "user",
+    });
+    setIsEditUserOpen(true);
+  }
+
+  async function handleUpdateUser(e) {
+    e.preventDefault();
+    if (!editUserForm.name.trim()) {
+      toast.warning("Name cannot be empty.");
+      return;
+    }
+    if (!editingUser) return;
+
+    setEditUserLoading(true);
+    try {
+      const res = await axios.put(
+        `http://localhost:1000/admin/users/${editingUser._id}`,
+        {
+          name: editUserForm.name.trim(),
+          role: editUserForm.role,
+        },
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        },
+      );
+
+      toast.success(res.data?.msg || "User updated successfully!");
+
+      const currentUserId = user?.id || user?._id;
+      if (
+        currentUserId &&
+        currentUserId.toString() === editingUser._id.toString()
+      ) {
+        if (res.data?.token) {
+          updateAuthUser(res.data.user, res.data.token);
+        } else {
+          updateAuthUser(res.data.user);
+        }
+        if (editUserForm.role !== "admin") {
+          setIsEditUserOpen(false);
+          navigate("/");
+          return;
+        }
+      }
+
+      setIsEditUserOpen(false);
+      setEditingUser(null);
+      fetchTabData("users");
+    } catch (err) {
+      toast.error(
+        "Failed to update user: " +
+          (err.response?.data?.msg ||
+            err.response?.data?.message ||
+            err.message),
+      );
+    } finally {
+      setEditUserLoading(false);
     }
   }
 
@@ -422,25 +650,19 @@ const Admin = () => {
     }
   }
 
-  async function handleDeleteMenu(id) {
-    if (!window.confirm("Are you sure you want to delete this menu item?"))
-      return;
-    try {
-      await axios.delete(`http://localhost:1000/menu/delete/${id}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        withCredentials: true,
-      });
-      toast.success("Menu item deleted successfully!");
-      fetchTabData("menu");
-      fetchDashboardStats();
-    } catch (err) {
-      toast.error(
-        "Failed to delete menu item: " +
-          (err.response?.data?.msg ||
-            err.response?.data?.message ||
-            err.message),
-      );
-    }
+  function handleDeleteMenu(itemOrId, name = "") {
+    const id = typeof itemOrId === "object" ? itemOrId?._id : itemOrId;
+    const displayName =
+      typeof itemOrId === "object"
+        ? `${itemOrId?.name || "Menu item"}${itemOrId?.price ? ` ($${itemOrId.price})` : ""}`
+        : name;
+    confirmDelete(
+      "menu",
+      id,
+      displayName,
+      "Delete Menu Item",
+      "Are you sure you want to delete this dish? It will be permanently removed from the menu.",
+    );
   }
 
   // ── Blog Modal & CRUD Handlers ──
@@ -520,25 +742,17 @@ const Admin = () => {
     }
   }
 
-  async function handleDeleteBlog(id) {
-    if (!window.confirm("Are you sure you want to delete this blog post?"))
-      return;
-    try {
-      await axios.delete(`http://localhost:1000/blog/delete/${id}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        withCredentials: true,
-      });
-      toast.success("Blog post deleted successfully!");
-      fetchTabData("blog");
-      fetchDashboardStats();
-    } catch (err) {
-      toast.error(
-        "Failed to delete blog: " +
-          (err.response?.data?.msg ||
-            err.response?.data?.message ||
-            err.message),
-      );
-    }
+  function handleDeleteBlog(blogOrId, title = "") {
+    const id = typeof blogOrId === "object" ? blogOrId?._id : blogOrId;
+    const displayName =
+      typeof blogOrId === "object" ? blogOrId?.title || "" : title;
+    confirmDelete(
+      "blog",
+      id,
+      displayName,
+      "Delete Blog Post",
+      "Are you sure you want to delete this blog post? This action cannot be undone.",
+    );
   }
 
   // Fetch Dashboard Stats
@@ -652,39 +866,34 @@ const Admin = () => {
   }, [activeTab]);
 
   // Delete Handlers
-  async function handleDeleteBooking(id) {
-    if (!window.confirm("Are you sure you want to delete this booking?"))
-      return;
-    try {
-      await axios.delete(`http://localhost:1000/booking/delete/${id}`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        withCredentials: true,
-      });
-      toast.success("Booking deleted successfully!");
-      fetchTabData("bookings");
-      fetchDashboardStats();
-    } catch (err) {
-      toast.error(
-        "Failed to delete booking: " + (err.response?.data?.msg || err.message),
-      );
-    }
+  function handleDeleteBooking(bookingOrId, name = "") {
+    const id = typeof bookingOrId === "object" ? bookingOrId?._id : bookingOrId;
+    const displayName =
+      typeof bookingOrId === "object"
+        ? `${bookingOrId?.name || "Booking"}${bookingOrId?.date ? ` (${new Date(bookingOrId.date).toLocaleDateString()} - ${bookingOrId.time || ""})` : ""}`
+        : name;
+    confirmDelete(
+      "booking",
+      id,
+      displayName,
+      "Delete Booking",
+      "Are you sure you want to cancel and delete this table reservation?",
+    );
   }
 
-  async function handleDeleteComment(id) {
-    if (!window.confirm("Are you sure you want to delete this comment?"))
-      return;
-    try {
-      await axios.delete(`http://localhost:1000/comment/delete/${id}`, {
-        withCredentials: true,
-      });
-      toast.success("Comment deleted successfully!");
-      fetchTabData("comments");
-      fetchDashboardStats();
-    } catch (err) {
-      toast.error(
-        "Failed to delete comment: " + (err.response?.data?.msg || err.message),
-      );
-    }
+  function handleDeleteComment(commentOrId, name = "") {
+    const id = typeof commentOrId === "object" ? commentOrId?._id : commentOrId;
+    const displayName =
+      typeof commentOrId === "object"
+        ? `"${commentOrId?.comments || commentOrId?.comment || "Feedback"}" by ${commentOrId?.name || "Customer"}`
+        : name;
+    confirmDelete(
+      "comment",
+      id,
+      displayName,
+      "Delete Comment",
+      "Are you sure you want to delete this customer feedback comment?",
+    );
   }
 
   function handleLogout() {
@@ -1159,13 +1368,22 @@ const Admin = () => {
                                   : "N/A"}
                               </td>
                               <td className="py-3 px-4 text-right">
-                                <button
-                                  onClick={() => handleDeleteUser(u._id)}
-                                  className="text-red-500 hover:text-red-700 p-1.5 rounded hover:bg-red-50 transition cursor-pointer"
-                                  title="Delete user"
-                                >
-                                  <MdDeleteOutline className="text-lg" />
-                                </button>
+                                <div className="flex items-center justify-end gap-1.5">
+                                  <button
+                                    onClick={() => handleOpenEditUser(u)}
+                                    className="text-blue-600 hover:text-blue-800 p-1.5 rounded hover:bg-blue-50 transition cursor-pointer"
+                                    title="Edit user"
+                                  >
+                                    <MdEdit className="text-lg" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteUser(u)}
+                                    className="text-red-500 hover:text-red-700 p-1.5 rounded hover:bg-red-50 transition cursor-pointer"
+                                    title="Delete user"
+                                  >
+                                    <MdDeleteOutline className="text-lg" />
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           ))}
@@ -1308,7 +1526,7 @@ const Admin = () => {
                               </td>
                               <td className="py-3 px-4 text-right">
                                 <button
-                                  onClick={() => handleDeleteBooking(b._id)}
+                                  onClick={() => handleDeleteBooking(b)}
                                   className="text-red-500 hover:text-red-700 p-1.5 rounded hover:bg-red-50 transition cursor-pointer"
                                   title="Delete booking"
                                 >
@@ -1427,7 +1645,7 @@ const Admin = () => {
                             </p>
                           </div>
                           <button
-                            onClick={() => handleDeleteComment(c._id)}
+                            onClick={() => handleDeleteComment(c)}
                             className="text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50 transition cursor-pointer"
                             title="Delete comment"
                           >
@@ -1631,7 +1849,7 @@ const Admin = () => {
                                     <MdEdit className="text-lg" />
                                   </button>
                                   <button
-                                    onClick={() => handleDeleteMenu(m._id)}
+                                    onClick={() => handleDeleteMenu(m)}
                                     className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition cursor-pointer"
                                     title="Delete Item"
                                   >
@@ -1807,7 +2025,7 @@ const Admin = () => {
                                     <MdEdit className="text-lg" />
                                   </button>
                                   <button
-                                    onClick={() => handleDeleteBlog(b._id)}
+                                    onClick={() => handleDeleteBlog(b)}
                                     className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition cursor-pointer"
                                     title="Delete Post"
                                   >
@@ -1860,43 +2078,88 @@ const Admin = () => {
             {/* Avatar + Info */}
             <div className="flex flex-col items-center gap-3 py-4 px-2 bg-white rounded-xl border border-[#e8dfd3] mb-5">
               <div className="w-20 h-20 rounded-full bg-[#121d27] flex items-center justify-center text-[#c5a572] text-3xl font-bold font-serif shadow-md">
-                {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
+                {settingForm.name
+                  ? settingForm.name.charAt(0).toUpperCase()
+                  : user?.name
+                    ? user.name.charAt(0).toUpperCase()
+                    : "A"}
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold text-[#121d27] font-serif">
-                  {user?.name || "Admin"}
+                  {settingForm.name || user?.name || "Admin"}
                 </p>
                 <p className="text-xs text-gray-500">{user?.email || "—"}</p>
                 <span className="inline-block mt-1.5 text-[11px] font-semibold px-3 py-0.5 rounded-full bg-[#121d27] text-[#c5a572] capitalize">
-                  {user?.role || "admin"}
+                  {settingForm.role || user?.role || "admin"}
                 </span>
               </div>
             </div>
 
-            {/* Info Rows */}
-            <div className="space-y-2 text-sm mb-6">
-              <div className="flex justify-between items-center px-3 py-2 bg-white rounded-lg border border-[#e8dfd3]">
-                <span className="text-gray-500 font-medium">Name</span>
-                <span className="font-semibold text-[#121d27]">
-                  {user?.name || "—"}
-                </span>
+            {/* Update Form: Name & Role only */}
+            <form onSubmit={handleUpdateSettings} className="space-y-3 mb-4">
+              {/* Name Field */}
+              <div className="bg-white rounded-xl border border-[#e8dfd3] focus-within:ring-1 focus-within:ring-[#c5a572] px-3.5 py-2.5 transition">
+                <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Enter your name"
+                  value={settingForm.name}
+                  onChange={(e) =>
+                    setSettingForm({ ...settingForm, name: e.target.value })
+                  }
+                  className="w-full bg-transparent font-semibold text-[#121d27] text-sm outline-none"
+                />
               </div>
-              <div className="flex justify-between items-center px-3 py-2 bg-white rounded-lg border border-[#e8dfd3]">
-                <span className="text-gray-500 font-medium">Email</span>
-                <span className="font-semibold text-[#121d27]">
+
+              {/* Email Field (Read-only) */}
+              <div className="bg-gray-100/70 rounded-xl border border-[#e8dfd3] px-3.5 py-2.5 select-none">
+                <div className="flex justify-between items-center mb-0.5">
+                  <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    Email
+                  </span>
+                  <span className="text-[10px] text-gray-400 font-medium bg-gray-200/70 px-2 py-0.5 rounded">
+                    Read-only
+                  </span>
+                </div>
+                <p className="font-semibold text-gray-500 text-sm truncate">
                   {user?.email || "—"}
-                </span>
+                </p>
               </div>
-              <div className="flex justify-between items-center px-3 py-2 bg-white rounded-lg border border-[#e8dfd3]">
-                <span className="text-gray-500 font-medium">Role</span>
-                <span className="font-semibold text-[#121d27] capitalize">
-                  {user?.role || "admin"}
-                </span>
+
+              {/* Role Field */}
+              <div className="bg-white rounded-xl border border-[#e8dfd3] focus-within:ring-1 focus-within:ring-[#c5a572] px-3.5 py-2.5 transition">
+                <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                  Role
+                </label>
+                <select
+                  value={settingForm.role}
+                  onChange={(e) =>
+                    setSettingForm({ ...settingForm, role: e.target.value })
+                  }
+                  className="w-full bg-transparent font-semibold text-[#121d27] text-sm outline-none cursor-pointer capitalize"
+                >
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                </select>
               </div>
-            </div>
+
+              {/* Update button */}
+              <button
+                type="submit"
+                disabled={settingLoading}
+                className="w-full mt-2 flex items-center justify-center gap-2 bg-[#c5a572] hover:bg-[#b59560] text-[#121d27] font-bold text-sm py-2.5 rounded-xl transition cursor-pointer shadow-md disabled:opacity-50"
+              >
+                <MdEdit className="text-base" />
+                {settingLoading ? "Updating..." : "Update"}
+              </button>
+            </form>
 
             {/* Logout button */}
             <button
+              type="button"
               onClick={() => {
                 setIsSettingModalOpen(false);
                 logout();
@@ -1906,6 +2169,109 @@ const Admin = () => {
             >
               <MdLogout className="text-lg" /> Logout
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════
+          MODAL: EDIT SPECIFIC USER (NAME & ROLE ONLY)
+         ══════════════════════════════════════════════════════ */}
+      {isEditUserOpen && editingUser && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#FAF7F2] border border-[#e3d7c5] rounded-2xl shadow-2xl w-full max-w-md p-6 relative animate-in fade-in zoom-in duration-200">
+            <button
+              onClick={() => {
+                setIsEditUserOpen(false);
+                setEditingUser(null);
+              }}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-200/60 transition cursor-pointer"
+              title="Close"
+            >
+              <MdClose className="text-xl" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-[#121d27] flex items-center justify-center text-[#c5a572]">
+                <MdEdit className="text-xl" />
+              </div>
+              <div>
+                <h3 className="text-xl font-serif font-bold text-[#121d27]">
+                  Edit User
+                </h3>
+                <p className="text-xs text-gray-500">
+                  Update name and role only
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleUpdateUser} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Full Name"
+                  value={editUserForm.name}
+                  onChange={(e) =>
+                    setEditUserForm({ ...editUserForm, name: e.target.value })
+                  }
+                  className="w-full bg-white border border-[#e8dfd3] focus:ring-1 focus:ring-[#c5a572] outline-none rounded-xl px-3.5 py-2.5 text-sm transition"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Email Address
+                  </label>
+                  <span className="text-[10px] text-gray-400 font-medium">Read-only</span>
+                </div>
+                <input
+                  type="email"
+                  disabled
+                  value={editingUser.email || ""}
+                  className="w-full bg-gray-100/80 border border-[#e8dfd3] text-gray-500 rounded-xl px-3.5 py-2.5 text-sm font-medium cursor-not-allowed select-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
+                  Account Role
+                </label>
+                <select
+                  value={editUserForm.role}
+                  onChange={(e) =>
+                    setEditUserForm({ ...editUserForm, role: e.target.value })
+                  }
+                  className="w-full bg-white border border-[#e8dfd3] focus:ring-1 focus:ring-[#c5a572] outline-none rounded-xl px-3.5 py-2.5 text-sm transition cursor-pointer capitalize"
+                >
+                  <option value="user">User (Customer)</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditUserOpen(false);
+                    setEditingUser(null);
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 bg-gray-200 hover:bg-gray-300 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={editUserLoading}
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-[#121d27] bg-[#c5a572] hover:bg-[#b59560] transition cursor-pointer shadow-md disabled:opacity-50"
+                >
+                  {editUserLoading ? "Updating..." : "Update"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -2504,6 +2870,21 @@ const Admin = () => {
           </div>
         </div>
       )}
+
+      {/* ══════════════════════════════════════════════════════
+          MODAL: CUSTOM DELETE CONFIRMATION
+         ══════════════════════════════════════════════════════ */}
+      <DeleteConfirmModal
+        isOpen={deleteModal.isOpen}
+        title={deleteModal.title}
+        message={deleteModal.message}
+        itemName={deleteModal.itemName}
+        loading={deleteModal.loading}
+        onConfirm={handleExecuteDelete}
+        onClose={() =>
+          setDeleteModal((prev) => ({ ...prev, isOpen: false }))
+        }
+      />
     </div>
   );
 };
