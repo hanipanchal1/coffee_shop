@@ -24,8 +24,6 @@ const Home = () => {
     getmenu();
   }, []);
 
-  // ✅ React state updates are asynchronous!
-  // To see the updated state, watch it with a useEffect:
   useEffect(() => {
     console.log("Updated menu state:", menu);
   }, [menu]);
@@ -35,7 +33,6 @@ const Home = () => {
       const response = await axios.get("http://localhost:1000/menu/read");
       const fetchedMenu = response.data.readMenu || [];
       setMenu(fetchedMenu);
-      console.log("Response from backend:", fetchedMenu);
     } catch (error) {
       console.error("Error fetching menu:", error);
     }
@@ -81,221 +78,130 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  // ─────────────────────────────────────────────────────────────
-  //  Special Menus Configuration
-  //  - Links category names to background images & titles
-  //  - Food items are dynamically loaded from MongoDB API (menu state)
-  //  - Fallback items display if database has no items for that category yet
-  // ─────────────────────────────────────────────────────────────
   const specialMenus = [
     {
       category: "breakfast",
       title: "BREAKFAST",
       bgImage: breakfastImg,
-      fallback: [
-        "Pancake Stack",
-        "Avocado Toast",
-        "Eggs Benedict",
-        "French Toast",
-        "Fruit Bowl",
-      ],
+      fallback: ["Pancake Stack", "Avocado Toast", "Eggs Benedict", "French Toast", "Fruit Bowl"],
     },
     {
       category: "lunch",
       title: "LUNCH",
       bgImage: lunchImg,
-      fallback: [
-        "Club Sandwich",
-        "Caesar Salad",
-        "Pasta Primavera",
-        "Tomato Basil Soup",
-        "Grilled Burger",
-      ],
+      fallback: ["Club Sandwich", "Caesar Salad", "Pasta Primavera", "Tomato Basil Soup", "Grilled Burger"],
     },
     {
       category: "dinner",
       title: "DINNER",
       bgImage: dinnerImg,
-      fallback: [
-        "Ribeye Steak",
-        "Grilled Salmon",
-        "Chicken Marsala",
-        "Mushroom Risotto",
-        "Seafood Platter",
-      ],
+      fallback: ["Ribeye Steak", "Grilled Salmon", "Chicken Marsala", "Mushroom Risotto", "Seafood Platter"],
     },
   ];
 
   return (
     <div>
-      <div className="bg-[url(../src/assets/img/bgcafe.png)] w-full h-[84vh] bg-cover bg-center">
-        <div className="flex flex-col text-white items-center justify-center py-40 gap-3 ">
-          <h1 className="text-[#c5a572] font-'Great Vibes' ,cursive text-4xl">
+      {/* ===== Hero Section ===== */}
+      <div className="bg-[url(../src/assets/img/bgcafe.png)] w-full h-[70vh] sm:h-[75vh] lg:h-[84vh] bg-cover bg-center">
+        <div className="flex flex-col text-white items-center justify-center h-full px-4 gap-3 text-center">
+          <h1 className="text-[#c5a572] text-3xl sm:text-4xl font-['Great_Vibes']">
             Welcome to Oneline
           </h1>
-          <h2 className="text-4xl font-serif">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif max-w-2xl">
             Feel the Authentic & Taste From Us
           </h2>
-          <div className="text-[#c5a572] flex ">
-            <samp>_________</samp>
-            <img className="w-5" src="../src/assets/img/cafe.svg" alt="error" />
-            <samp>_________</samp>
+          <div className="text-[#c5a572] flex items-center gap-2">
+            <span>_________</span>
+            <img className="w-5" src="../src/assets/img/cafe.svg" alt="" />
+            <span>_________</span>
           </div>
-          <h3 className="text-gray-300">18 Years to Master, Yours to Savor</h3>
-          <button className="border px-4 py-1 text-gray-300">
+          <h3 className="text-gray-300 text-sm sm:text-base">18 Years to Master, Yours to Savor</h3>
+          <button className="border border-gray-300 px-5 py-2 text-gray-300 hover:bg-white hover:text-black transition-all mt-2">
             Book A Table
           </button>
         </div>
       </div>
 
-      <div className="h-[85vh] flex justify-between items-center ml-40">
-        <div className="flex flex-col gap-5">
-          <h1 className="font-sans text-[#c5a572] text-md">OUR STORY</h1>
-          <h1 className="font-serif text-3xl">
+      {/* ===== Our Story ===== */}
+      <div className="flex flex-col lg:flex-row justify-between items-center gap-10 lg:gap-0 px-4 sm:px-6 md:px-10 lg:px-20 xl:ml-40 py-16 lg:h-[85vh]">
+        <div className="flex flex-col gap-4 sm:gap-5 max-w-xl text-center lg:text-left">
+          <h1 className="font-sans text-[#c5a572] text-sm sm:text-md tracking-wide">OUR STORY</h1>
+          <h1 className="font-serif text-2xl sm:text-3xl">
             A Brief History Of How We Started.
           </h1>
-          <h1 className="font-sans text-sm text-gray-600">
-            Iste sed saepe animi magnam voluptatibus voluptatibus <br />
-            natus quaerat. Sit sunt id rem. Doloribus et quam et <br />
-            tempora veritatis praesentium vero. Tempora repudiandae <br />
-            quia.Dicta dolorum neque illum sit quam nemo labore <br />
-            asperiores sed. Exercitationem voluptatem ut qui <br />
-            accusamus veniam. Fugit voluptatem dignissimos aperiam <br />
-            beatae labore esse.
-          </h1>
-          <button className="font-sans border px-4 py-1 text-[#c5a572] w-35">
+          <p className="font-sans text-sm text-gray-600 leading-relaxed">
+            Iste sed saepe animi magnam voluptatibus voluptatibus natus quaerat.
+            Sit sunt id rem. Doloribus et quam et tempora veritatis praesentium
+            vero. Tempora repudiandae quia. Dicta dolorum neque illum sit quam
+            nemo labore asperiores sed. Exercitationem voluptatem ut qui
+            accusamus veniam. Fugit voluptatem dignissimos aperiam beatae labore
+            esse.
+          </p>
+          <button className="font-sans border border-[#c5a572] px-5 py-2 text-[#c5a572] w-fit mx-auto lg:mx-0 hover:bg-[#c5a572] hover:text-white transition-all">
             Book A Table
           </button>
         </div>
-        <div className="flex justify-center items-center gap-5">
-          <img
-            className="h-70"
-            src="../src/assets/img/ourstory1.png"
-            alt="error"
-          />
-          <img
-            className="h-90"
-            src="../src/assets/img/ourstory2.png"
-            alt="error"
-          />
-          <img
-            className="w-40 mt-100"
-            src="../src/assets/img/ourstorybg2.png"
-            alt=""
-          />
+
+        <div className="flex justify-center items-end gap-3 sm:gap-5 relative">
+          <img className="h-48 sm:h-60 lg:h-70 object-cover" src="../src/assets/img/ourstory1.png" alt="" />
+          <img className="h-56 sm:h-72 lg:h-90 object-cover" src="../src/assets/img/ourstory2.png" alt="" />
+          <img className="hidden lg:block w-40 absolute -bottom-10 right-0" src="../src/assets/img/ourstorybg2.png" alt="" />
         </div>
       </div>
 
-      <div className="bg-[url(../src/assets/img/ourserviceimg.png)] w-full h-screen bg-cover bg-center flex flex-col items-center justify-center ">
-        <div className="">
-          <h1 className="text-[#c5a572] font-sans text-md">OUR SERVICES</h1>
-          <h1 className="text-4xl font-serif text-white">We Hold Events</h1>
+      {/* ===== Our Services ===== */}
+      <div className="bg-[url(../src/assets/img/ourserviceimg.png)] w-full min-h-screen bg-cover bg-center flex flex-col items-center justify-center py-16 px-4">
+        <div className="text-center mb-10 sm:mb-14">
+          <h1 className="text-[#c5a572] font-sans text-sm sm:text-md tracking-wide">OUR SERVICES</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif text-white mt-2">We Hold Events</h1>
         </div>
 
-        <div className="flex gap-5 items-center justify-center">
-          <div className="flex flex-col items-center">
-            <img
-              className="w-16 -mb-4"
-              src="../src/assets/img/holidayparies.svg"
-              alt=""
-            />
-
-            <div className="border border-[#3f403a] px-10 pt-12 pb-10 text-center">
-              <h2 className="text-3xl font-serif text-[#c5a363]">
-                Holiday Parties
-              </h2>
-              <p className="mt-3 text-md text-gray-500">
-                Itaque ducimus commodi omnis
-                <br />
-                adipisci et ullam in ut ut. Ab enim sed
-                <br />
-                et porro expedita. Optio id cum officiis
-                <br />
-                nemo omnis consequatur numquam
-              </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-5 max-w-6xl w-full">
+          {[
+            { icon: "../src/assets/img/holidayparies.svg", title: "Holiday Parties", text: "Itaque ducimus commodi omnis adipisci et ullam in ut ut. Ab enim sed et porro expedita. Optio id cum officiis nemo omnis consequatur numquam" },
+            { icon: "../src/assets/img/birthday.svg", title: "Birthday Parties", text: "Provident similique sed molestiae a. Praesentium minus maiores qui. Voluptas voluptatibus perferendis corrupti in reiciendis neque dolorem" },
+            { icon: "../src/assets/img/anniversaries.svg", title: "Anniversaries", text: "Modi necessitatibus velit culpa. Animi est et eum quidem. Placeat atque tenetur delectus laborum. Et modi nihil. Voluptate necessitatibus atque" },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center">
+              <img className="w-14 sm:w-16 -mb-4 z-10" src={item.icon} alt="" />
+              <div className="border border-[#3f403a] px-6 sm:px-8 pt-12 pb-8 text-center bg-black/20 backdrop-blur-sm w-full">
+                <h2 className="text-2xl sm:text-3xl font-serif text-[#c5a363]">{item.title}</h2>
+                <p className="mt-3 text-sm sm:text-md text-gray-400 leading-relaxed">{item.text}</p>
+              </div>
             </div>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <img
-              className="w-16 -mb-4"
-              src="../src/assets/img/birthday.svg"
-              alt=""
-            />
-
-            <div className="border border-[#3f403a] px-10 pt-12 pb-10 text-center">
-              <h2 className="text-3xl font-serif text-[#c5a363]">
-                Birthday Parties
-              </h2>
-              <p className="mt-3 text-md text-gray-500">
-                Provident similique sed molestiae a.
-                <br />
-                Praesentium minus maiores qui.
-                <br />
-                Voluptas voluptatibus perferendis
-                <br />
-                corrupti in reiciendis neque dolorem
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center">
-            <img
-              className="w-16 -mb-4"
-              src="../src/assets/img/anniversaries.svg"
-              alt=""
-            />
-
-            <div className="border border-[#3f403a] px-10 pt-12 pb-10 text-center">
-              <h2 className="text-3xl font-serif text-[#c5a363]">
-                Anniversaries
-              </h2>
-              <p className="mt-3 text-md text-gray-500">
-                Modi necessitatibus velit culpa. Animi
-                <br />
-                est et eum quidem. Placeat atque
-                <br />
-                tenetur delectus laborum. Et modi
-                <br />
-                nihil.Voluptate necessitatibus atque
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      <div className="w-full h-screen px-25 py-10">
-        <div className="flex items-center justify-between ">
-          <div className="flex flex-col gap-5">
-            <h1 className="text-[#c5a572] font-sans">SPECIAL TODAY</h1>
-            <h2 className="text-4xl font-serif">
-              Feel The Authentic & Original <br />
+      {/* ===== Special Today ===== */}
+      <div className="w-full px-4 sm:px-6 md:px-10 lg:px-16 xl:px-25 py-12 sm:py-16">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-10">
+          <div className="flex flex-col gap-3 sm:gap-5">
+            <h1 className="text-[#c5a572] font-sans tracking-wide">SPECIAL TODAY</h1>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif">
+              Feel The Authentic & Original <br className="hidden sm:block" />
               Taste From Us
             </h2>
           </div>
-          <div className="text-gray-600">
+          <div className="text-gray-600 text-sm sm:text-base max-w-md leading-relaxed">
             <p>
               Iste sed saepe animi magnam voluptatibus voluptatibus natus
-              quaerat. Sit <br />
-              sunt id rem. Doloribus et quam et tempora veritatis praesentium
-              vero. <br />
-              Tempora repudiandae quia
+              quaerat. Sit sunt id rem. Doloribus et quam et tempora veritatis
+              praesentium vero. Tempora repudiandae quia
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-10 justify-center items-center mt-10">
+
+        <div className="flex flex-wrap gap-6 sm:gap-8 lg:gap-10 justify-center items-center mt-8">
           {specialMenus.map((special, index) => {
-            // Find items from MongoDB API matching this category (case-insensitive)
             const dbItems = menu
               .filter(
                 (item) =>
                   item.category &&
-                  item.category.trim().toLowerCase() ===
-                    special.category.toLowerCase(),
+                  item.category.trim().toLowerCase() === special.category.toLowerCase()
               )
               .map((item) => item.name);
 
-            // Use database items if available; otherwise show fallback items
             const cardItems = dbItems.length > 0 ? dbItems : special.fallback;
 
             return (
@@ -311,254 +217,191 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="px-25">
-        <div className="bg-[#f4eee4] w-full h-screen ml-r-25 flex flex-col gap-10 justify-center items-center">
-          <div className="text-center flex flex-col ">
-            <h1 className="text-[#c5a572] font-sans">RESERVATION</h1>
-            <h2 className="text-4xl font-serif">Online Booking</h2>
+      {/* ===== Reservation ===== */}
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 xl:px-25 py-12">
+        <div className="bg-[#f4eee4] w-full py-12 sm:py-16 lg:py-20 flex flex-col gap-8 sm:gap-10 justify-center items-center">
+          <div className="text-center">
+            <h1 className="text-[#c5a572] font-sans tracking-wide">RESERVATION</h1>
+            <h2 className="text-3xl sm:text-4xl font-serif mt-2">Online Booking</h2>
           </div>
-          <div className="">
-            <form
-              onSubmit={booking}
-              className="flex flex-col justify-center items-center gap-5"
-            >
-              <div className="flex  gap-10">
-                <input
-                  className="border-b w-90 text-gray-500 h-12"
-                  type="text"
-                  placeholder="Name*"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <input
-                  className="border-b w-90 text-gray-500 h-12"
-                  type="text"
-                  placeholder="E-mail*"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="flex gap-10">
-                <input
-                  className="border-b w-90 text-gray-500 h-12"
-                  type="tel"
-                  placeholder="Phone*"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <input
-                  className="border-b w-90 text-gray-500 h-12"
-                  type="date"
-                  placeholder="Date*"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </div>
-              <div className="flex gap-10">
-                <input
-                  className="border-b w-90 text-gray-500 h-12"
-                  type="time"
-                  placeholder="Time*"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                />
-                <input
-                  className="border-b w-90 text-gray-500 h-12"
-                  type="number"
-                  min="1"
-                  placeholder="Seats*"
-                  value={seats}
-                  onChange={(e) => setSeats(e.target.value)}
-                />
-              </div>
+
+          <form onSubmit={booking} className="flex flex-col justify-center items-center gap-5 w-full max-w-4xl px-4">
+            <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
               <input
-                className="border-b w-190 text-gray-500 h-12"
+                className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
                 type="text"
-                placeholder="Notes*"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Name*"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
-              <button className="border px-5 py-2 flex justify-center bg-black text-white">
-                Book a Table
-              </button>
-            </form>
-          </div>
+              <input
+                className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
+                type="email"
+                placeholder="E-mail*"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
+              <input
+                className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
+                type="tel"
+                placeholder="Phone*"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+              <input
+                className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
+              <input
+                className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
+              <input
+                className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
+                type="number"
+                min="1"
+                placeholder="Seats*"
+                value={seats}
+                onChange={(e) => setSeats(e.target.value)}
+              />
+            </div>
+
+            <input
+              className="border-b border-gray-400 w-full text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572]"
+              type="text"
+              placeholder="Notes*"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
+
+            <button className="border border-black px-8 py-3 bg-black text-white hover:bg-white hover:text-black transition-all mt-4">
+              Book a Table
+            </button>
+          </form>
         </div>
       </div>
 
       <Team />
 
-      <div className="px-25 h-screen flex justify-center items-center">
-        <div className="bg-[url(../src/assets/img/testimonialbg.png)] w-full h-[80vh] bg-cover bg-center">
-          <div className="flex flex-col justify-center items-center py-15 gap-3">
-            <h1 className="text-[#c5a572] font-sans">TESTIMONIAL</h1>
-            <h2 className="text-4xl font-serif text-white">
-              In The Words Of Our Clinets
+      {/* ===== Testimonial ===== */}
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 xl:px-25 py-12 sm:py-16">
+        <div className="bg-[url(../src/assets/img/testimonialbg.png)] w-full bg-cover bg-center py-12 sm:py-16 rounded-sm">
+          <div className="flex flex-col justify-center items-center gap-2 mb-10">
+            <h1 className="text-[#c5a572] font-sans tracking-wide">TESTIMONIAL</h1>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-white text-center">
+              In The Words Of Our Clients
             </h2>
           </div>
-          <div className="flex px-10 gap-10">
-            <div className="w-79 bg-white p-4">
-              <div className="border border-[#dfc9a4] p-4 text-center ">
-                <img
-                  className="flex justify-center items-center mx-auto w-8"
-                  src="../src/assets/img/quote.svg"
-                  alt="error"
-                />
-                <p className="text-[#888888] text-md font-sans">
-                  " Harum quis facere a doloremque
-                  <br />
-                  dolore odio qui cupiditate.
-                  <br />
-                  Repellendus officiis culpa repellat
-                  <br />
-                  doloremque quo. Aut ad sunt
-                  <br />
-                  modi sit. "
-                </p>
-                <p className="text-[#4d5358] text-md mt-2">– Armani Murray</p>
-              </div>
-            </div>
 
-            <div className="w-79 bg-white p-4">
-              <div className="border border-[#dfc9a4] p-4 text-center ">
-                <img
-                  className="flex justify-center items-center mx-auto w-8"
-                  src="../src/assets/img/quote.svg"
-                  alt="error"
-                />
-                <p className="text-[#888888] text-md font-sans">
-                  " Harum quis facere a doloremque
-                  <br />
-                  dolore odio qui cupiditate.
-                  <br />
-                  Repellendus officiis culpa repellat
-                  <br />
-                  doloremque quo. Aut ad sunt
-                  <br />
-                  modi sit. "
-                </p>
-                <p className="text-[#4d5358] text-md mt-2">– Armani Murray</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-10">
+            {[1, 2, 3].map((_, i) => (
+              <div key={i} className="bg-white p-4">
+                <div className="border border-[#dfc9a4] p-5 text-center h-full">
+                  <img className="mx-auto w-8 mb-3" src="../src/assets/img/quote.svg" alt="" />
+                  <p className="text-[#888888] text-sm sm:text-md font-sans leading-relaxed">
+                    "Harum quis facere a doloremque dolore odio qui cupiditate.
+                    Repellendus officiis culpa repellat doloremque quo. Aut ad
+                    sunt modi sit."
+                  </p>
+                  <p className="text-[#4d5358] text-sm mt-4">– Armani Murray</p>
+                </div>
               </div>
-            </div>
-
-            <div className="w-79 bg-white p-4">
-              <div className="border border-[#dfc9a4] p-4 text-center ">
-                <img
-                  className="flex justify-center items-center mx-auto w-8"
-                  src="../src/assets/img/quote.svg"
-                  alt="error"
-                />
-                <p className="text-[#888888] text-md font-sans">
-                  " Harum quis facere a doloremque
-                  <br />
-                  dolore odio qui cupiditate.
-                  <br />
-                  Repellendus officiis culpa repellat
-                  <br />
-                  doloremque quo. Aut ad sunt
-                  <br />
-                  modi sit. "
-                </p>
-                <p className="text-[#4d5358] text-md mt-2">– Armani Murray</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="px-25 ">
-        <div className="flex flex-col justify-center items-center">
-          <h1 className="text-[#c5a572] font-sans">LATEST BLOGS</h1>
-          <h2 className="text-4xl font-serif text-center">
-            Praesent Condimentum Rutrum Nibh, Nec <br />
-            Ullamcorper Odio Laoreet Blandit.
+      {/* ===== Latest Blogs ===== */}
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 xl:px-25 py-12 sm:py-16">
+        <div className="flex flex-col justify-center items-center mb-10 sm:mb-14">
+          <h1 className="text-[#c5a572] font-sans tracking-wide">LATEST BLOGS</h1>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-center mt-2 max-w-3xl">
+            Praesent Condimentum Rutrum Nibh, Nec Ullamcorper Odio Laoreet Blandit.
           </h2>
         </div>
-        <div className="flex flex-col gap-10 m-20">
-          <div className="flex justify-between">
-            <img
-              className="w-75"
-              src="../src/assets/img/blog1.png"
-              alt="error"
-            />
-            <div className="bg-[#f4eee4] w-65 h-60 flex flex-col justify-center items-center gap-3 ">
-              <img src="../src/assets/img/left-quote.svg" alt="error" />
-              <h2 className="font-serif text-center ">
-                Eum officia culpa expedita <br />
-                mollitia corporis.
+
+        <div className="flex flex-col gap-8 sm:gap-10">
+          {/* Row 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+            <img className="w-full h-56 sm:h-64 object-cover" src="../src/assets/img/blog1.png" alt="" />
+            <div className="bg-[#f4eee4] h-56 sm:h-64 flex flex-col justify-center items-center gap-3 p-6">
+              <img src="../src/assets/img/left-quote.svg" alt="" className="w-8" />
+              <h2 className="font-serif text-center text-lg">
+                Eum officia culpa expedita mollitia corporis.
               </h2>
-              <p className="text-[#888888]">Marshall Artis, Head Chef</p>
+              <p className="text-[#888888] text-sm">Marshall Artis, Head Chef</p>
             </div>
-            <img className="w-75" src="../src/assets/img/blog2.png" alt="" />
+            <img className="w-full h-56 sm:h-64 object-cover" src="../src/assets/img/blog2.png" alt="" />
           </div>
-          <div className="font-semi flex justify-between">
-            <div className=" w-65 h-60 flex flex-col gap-2">
-              <p className="text-[#b9b9b9]">21-04-2020 ~ Food</p>
-              <h2 className="font-serif ">
+
+          {/* Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex flex-col gap-2 justify-center">
+              <p className="text-[#b9b9b9] text-sm">21-04-2020 ~ Food</p>
+              <h2 className="font-serif text-lg sm:text-xl">
                 Macarons vs. Macaroons: What's the Difference There?
               </h2>
-              <p className="text-[#888888]">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat aute duis aute
-                lorem sit.
+              <p className="text-[#888888] text-sm leading-relaxed">
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat aute duis aute lorem sit.
               </p>
-              <p className="text-[#c5a572]">Read More → </p>
+              <p className="text-[#c5a572] cursor-pointer hover:underline">Read More →</p>
             </div>
-            <img
-              className="w-70"
-              src="../src/assets/img/blog.png"
-              alt="error"
-            />
-            <div className="w-65 h-60 flex flex-col gap-2">
-              <p className="text-[#b9b9b9]">22-04-2020 ~ Food</p>
-              <h2 className="font-serif ">
+            <img className="w-full h-56 sm:h-64 object-cover" src="../src/assets/img/blog.png" alt="" />
+            <div className="flex flex-col gap-2 justify-center">
+              <p className="text-[#b9b9b9] text-sm">22-04-2020 ~ Food</p>
+              <h2 className="font-serif text-lg sm:text-xl">
                 Ut doloremque exercitationem molestias rerum?
               </h2>
-              <p className="text-[#888888]">
-                Alias suscipit iure voluptas ea et et voluptatibus. Animi
-                assumenda libero.At natus id. Perferendis sunt repudiandae
-                tenetur fugit.
+              <p className="text-[#888888] text-sm leading-relaxed">
+                Alias suscipit iure voluptas ea et et voluptatibus. Animi assumenda libero. At natus id. Perferendis sunt repudiandae tenetur fugit.
               </p>
-              <p className="text-[#c5a572]">Read More → </p>
+              <p className="text-[#c5a572] cursor-pointer hover:underline">Read More →</p>
             </div>
           </div>
-          <div className="flex justify-between">
-            <div className="bg-[#f4eee4] w-65 h-60 flex flex-col justify-center items-center gap-3 ">
-              <img src="../src/assets/img/left-quote.svg" alt="error" />
-              <h2 className="font-serif text-center ">
-                Nihil quas ut adipisci est <br />
-                excepturi molestias.
+
+          {/* Row 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-[#f4eee4] h-56 sm:h-64 flex flex-col justify-center items-center gap-3 p-6">
+              <img src="../src/assets/img/left-quote.svg" alt="" className="w-8" />
+              <h2 className="font-serif text-center text-lg">
+                Nihil quas ut adipisci est excepturi molestias.
               </h2>
-              <p className="text-[#888888]">Dorian Hackett Sr.</p>
+              <p className="text-[#888888] text-sm">Dorian Hackett Sr.</p>
             </div>
 
-            <div className="w-65 h-60 flex flex-col gap-2">
-              <p className="text-[#b9b9b9]">22-04-2020 ~ Food</p>
-              <h2 className="font-serif ">
+            <div className="flex flex-col gap-2 justify-center">
+              <p className="text-[#b9b9b9] text-sm">22-04-2020 ~ Food</p>
+              <h2 className="font-serif text-lg sm:text-xl">
                 How to Make the Perfect Double Dutch in 5 Steps
               </h2>
-              <p className="text-[#888888]">
-                Id veritatis culpa voluptas explicabo eum in facilis cupiditate.
-                Vel eos possimus accusamus qui nihil. Exercitationem asperiores
-                dolor aut beatae.
+              <p className="text-[#888888] text-sm leading-relaxed">
+                Id veritatis culpa voluptas explicabo eum in facilis cupiditate. Vel eos possimus accusamus qui nihil. Exercitationem asperiores dolor aut beatae.
               </p>
-              <p className="text-[#c5a572]">Read More → </p>
+              <p className="text-[#c5a572] cursor-pointer hover:underline">Read More →</p>
             </div>
 
-            <div className="bg-[#f4eee4] w-65 h-60 flex flex-col justify-center items-center gap-3 ">
-              <img src="../src/assets/img/left-quote.svg" alt="error" />
-              <h2 className="font-serif text-center ">
-                Accusamus voluptatum <br />
-                dolores tenetur et autem.
+            <div className="bg-[#f4eee4] h-56 sm:h-64 flex flex-col justify-center items-center gap-3 p-6">
+              <img src="../src/assets/img/left-quote.svg" alt="" className="w-8" />
+              <h2 className="font-serif text-center text-lg">
+                Accusamus voluptatum dolores tenetur et autem.
               </h2>
-              <p className="text-[#888888]">Keegan Leuschke</p>
+              <p className="text-[#888888] text-sm">Keegan Leuschke</p>
             </div>
           </div>
         </div>
       </div>
 
       <Gallery />
-
       <Footer />
     </div>
   );

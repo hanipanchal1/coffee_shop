@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
-import { FaFacebookF } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaLinkedinIn } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
 import Footer from "../componets/Footer";
 import axios from "axios";
 import { toast } from "../utils/toast";
+import footerBg from "../assets/img/footerbg.png";
 
 const BDetails = () => {
+  const { id } = useParams();
+  const [blogData, setBlogData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [Comment, setcomment] = useState("");
   const [Name, setname] = useState("");
   const [Email, setemail] = useState("");
@@ -16,7 +18,25 @@ const BDetails = () => {
 
   useEffect(() => {
     fetchComments();
-  }, []);
+    if (id) {
+      fetchBlogDetails();
+    } else {
+      setLoading(false);
+    }
+  }, [id]);
+
+  async function fetchBlogDetails() {
+    try {
+      setLoading(true);
+      const res = await axios.get(`http://localhost:1000/blog/readbyIdblog/${id}`);
+      setBlogData(res.data.blog);
+    } catch (err) {
+      console.error("Error fetching blog details:", err);
+      toast.error("Failed to load blog details.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function fetchComments() {
     try {
@@ -53,198 +73,182 @@ const BDetails = () => {
       toast.error(errorMsg);
     }
   }
+
   return (
-    <div>
+    <div className="min-h-screen">
+      {/* Banner */}
       <div
-        className="w-full h-100 bg-cover bg-center flex flex-col justify-center items-center gap-3"
+        className="w-full h-64 sm:h-80 md:h-96 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3 px-4"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.55),rgb(16, 29, 40,0.90)), url(../src/assets/img/footerbg.png) `,
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${footerBg})`,
         }}
       >
-        <h1 className="text-[#c5a572] text-5xl font-serif text-extrabold">
+        <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">
           Blogs Details
         </h1>
-        <p className="text-[#b9b8b8] text-md">Home / Blogs / Blog Details</p>
+        <p className="text-[#b9b8b8] text-sm sm:text-base text-center">
+          <Link to="/" className="hover:underline">Home</Link> /{" "}
+          <Link to="/blog" className="hover:underline">Blogs</Link> / Blog Details
+        </p>
       </div>
 
-      <div className="px-25 mt-20">
-        <div className="flex gap-10">
-          <div className="">
-            <img
-              className="w-[55vw] h-[60vh]"
-              src="../src/assets/img/B1.png"
-              alt="error"
-            />
-
-            <div className="flex flex-col gap-5 mt-10 w-[55vw]">
-              <h1 className="font-sans text-[#c5a572] text-[18px]">
-                21-04-2020 ~ Food
-              </h1>
-              <h2 className="font-serif text-3xl">
-                Macarons vs. Macaroons: What's the Difference There?
-              </h2>
-              <p className="font-sans text-[20px] text-gray-600">
-                Aut sit est est. Tenetur ad reiciendis veniam omnis eligendi
-                porro illo natus. Quae vitae unde beatae et rem. Hic autem
-                voluptas nisi est dolore hic autem sapiente.Deleniti odit iusto
-                consequatur perferendis distinctio velit. Delectus non aperiam
-                rerum molestiae iure ratione totam totam dolores. Ipsam
-                explicabo perferendis. Facere aperiam accusantium aliquid
-                asperiores sunt cumque eos inventore.Amet omnis dolore quo
-                expedita. Veniam soluta esse magnam rerum doloribus numquam. Qui
-                eveniet quam sint explicabo tempora quisquam aspernatur. Quia
-                rerum ipsam sed aut itaque expedita recusandae numquam quaerat.
-                Voluptatem aliquam id odit deleniti et. Aliquam et excepturi
-                dolores quo.Ipsum sint ullam quidem omnis aut debitis velit.
-                Rerum voluptas esse et nobis quis saepe iste. Debitis eligendi
-                repellendus similique laborum. Ab nam dignissimos beatae.Magnam
-                at unde eos nostrum quibusdam eius. Modi nobis voluptatem libero
-                incidunt possimus rerum aut enim nulla. Tempore maxime quaerat.
-                Dolor accusantium et sunt sit optio praesentium quae voluptatem.
-              </p>
-              <h2 className="font-serif text-3xl">
-                Nam libero tempore, cum soluta eligendi optio
-              </h2>
-              <p className="font-sans text-[20px] text-gray-600">
-                Eaque aut odio expedita. Accusantium a dignissimos officiis.
-                Aspernatur a vel. Maxime ea occaecati ab nobis. Quo ex non vitae
-                voluptate temporibus sed qui. Sed distinctio molestiae eveniet
-                in dolor consequuntur quod debitis magni.Error qui eum animi
-                autem quos ipsam nihil. Id possimus ipsam quis. Quo sed nemo aut
-                perspiciatis voluptas nam optio. Maiores beatae officiis vel
-                molestias esse cumque veniam consequuntur incididunt.
-              </p>
-            </div>
-            <div className="flex w-[55vw] items-center justify-center gap-10 py-12">
-              <img
-                className="w-[26vw] h-[54vh] bg-cover bg-center"
-                src="../src/assets/img/blog/blogimg6.png"
-                alt="error"
-              />
-              <img
-                className="w-[26vw] h-[54vh] bg-cover bg-center"
-                src="../src/assets/img/blog/blogimg8.png"
-                alt="error"
-              />
-            </div>
-            <div className="w-[55vw]">
-              <p className="font-sans text-[20px] text-gray-600">
-                Aut rem rerum at fugiat. Dolores numquam ipsam corporis. Enim et
-                fugit eligendi. Blanditiis harum non eaque aspernatur. Mollitia
-                et distinctio voluptatem error hic numquam ea sunt aut. Pariatur
-                non similique et.Et iure enim dolore. Aspernatur soluta neque
-                mollitia quia accusantium provident non explicabo quia.
-                Praesentium et odit commodi dolores possimus quisquam expedita
-                ipsum.Voluptas vel vero officia alias ut. Assumenda nihil est
-                consequatur nesciunt cupiditate eum in libero dolor. Soluta odio
-                voluptatem dolores molestiae dolorem nesciunt. Aspernatur
-                similique repellendus beatae.Repellendus recusandae voluptate
-                reiciendis sequi alias eos. Quasi enim ratione voluptates a unde
-                sint provident eveniet omnis. Esse illo qui aut alias hic enim.
-              </p>
-            </div>
-
-            <div className="border flex gap-7 border-[#c5a572] mt-15 px-10 py-10">
-              <div className="">
-                <img
-                  className="w-40 h-35 bg-center bg-cover "
-                  src="../src/assets/img/team3.png"
-                  alt="error"
-                />
+      {/* Main Content Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-14 lg:mt-20 pb-16">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+          
+          {/* ========== LEFT / MAIN COLUMN ========== */}
+          <div className="flex-1 w-full min-w-0">
+            {loading ? (
+              <div className="w-full py-16 sm:py-20 text-center text-lg sm:text-xl text-[#c5a572] animate-pulse">
+                Loading blog details...
               </div>
-              <div className="flex flex-col gap-3">
-                <h1 className="text-3xl font-serif">Emilie D'Amore</h1>
-                <p className="text-[#646464] text-[18px]">
-                  Praesentium et odit commodi dolores possimus <br />
-                  quisquam expedita ipsum.Voluptas vel vero oficia alias
+            ) : !blogData ? (
+              <div className="w-full py-16 sm:py-20 text-center">
+                <h2 className="text-2xl sm:text-3xl font-serif text-[#121D27]">
+                  Blog not found
+                </h2>
+                <p className="text-gray-500 mt-2 text-sm sm:text-base">
+                  The blog you are looking for does not exist or has been removed.
                 </p>
-                <p className="text-xl flex gap-3">
-                  <FaFacebookF />
-                  <FaInstagram />
-                  <FaLinkedinIn />
-                  <FaTwitter />
-                </p>
+                <Link
+                  to="/blog"
+                  className="inline-block mt-4 text-[#c5a572] underline font-medium"
+                >
+                  ← Back to Blogs
+                </Link>
               </div>
-            </div>
+            ) : (
+              <>
+                {/* Blog Image */}
+                {blogData.image && (
+                  <img
+                    className="w-full h-56 sm:h-72 md:h-80 lg:h-[60vh] object-cover rounded"
+                    src={
+                      blogData.image.startsWith("http")
+                        ? blogData.image
+                        : `http://localhost:1000/uploads/${blogData.image}`
+                    }
+                    alt={blogData.title}
+                  />
+                )}
 
-            <div className="mt-10 flex flex-col gap-5">
-              <p className="text-5xl font-serif mb-10">
+                {/* Blog Details */}
+                <div className="flex flex-col gap-4 sm:gap-5 mt-6 sm:mt-8 lg:mt-10">
+                  <h1 className="font-sans text-[#c5a572] text-base sm:text-[18px]">
+                    {new Date(blogData.date || blogData.createdAt).toLocaleDateString(
+                      "en-US",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      }
+                    )}
+                  </h1>
+                  <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#121D27] leading-tight">
+                    {blogData.title}
+                  </h2>
+                  <p className="font-sans text-base sm:text-lg md:text-[20px] text-gray-700 whitespace-pre-line leading-relaxed">
+                    {blogData.description}
+                  </p>
+                </div>
+
+                {/* Author Card */}
+                {blogData.userId && (
+                  <div className="border border-[#c5a572] mt-10 sm:mt-12 lg:mt-15 px-5 sm:px-8 lg:px-10 py-6 sm:py-8 flex flex-col sm:flex-row gap-5 sm:gap-7 items-start sm:items-center">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#121D27] text-[#c5a572] flex items-center justify-center text-xl sm:text-2xl font-serif font-bold shrink-0">
+                      {blogData.userId.name?.charAt(0).toUpperCase() || "A"}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <h1 className="text-xl sm:text-2xl font-serif font-semibold text-[#121D27]">
+                        {blogData.userId.name}
+                      </h1>
+                      <p className="text-[#646464] text-sm sm:text-[16px] break-all">
+                        {blogData.userId.email}
+                      </p>
+                      <p className="text-xs uppercase tracking-wider text-[#c5a572] font-semibold">
+                        {blogData.userId.role || "Author"}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Comments List */}
+            <div className="mt-12 sm:mt-16 flex flex-col gap-4 sm:gap-5">
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-serif mb-4 sm:mb-6">
                 {commentsList.length > 0
                   ? `${commentsList.length} Comment${commentsList.length > 1 ? "s" : ""}`
-                  : "2 Comments"}
+                  : "0 Comments"}
               </p>
 
               {commentsList.length > 0 ? (
                 commentsList.map((c, index) => (
                   <div
                     key={c._id || index}
-                    className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5"
+                    className="bg-[#faf7f2] px-5 sm:px-8 lg:px-10 flex flex-col gap-2 py-4 sm:py-5 rounded"
                   >
-                    <h1 className="text-4xl font-serif">{c.name}</h1>
-                    <h1 className="text-[#646464] text-[14px]">
+                    <h1 className="text-xl sm:text-2xl font-serif font-semibold">
+                      {c.name}
+                    </h1>
+                    <h2 className="text-[#646464] text-xs sm:text-[14px]">
                       {c.createdAt
                         ? new Date(c.createdAt).toLocaleDateString()
                         : "Recent"}
-                    </h1>
-                    <p className="text-[#646464] text-[18px]">{c.comments}</p>
+                    </h2>
+                    <p className="text-[#646464] text-base sm:text-[18px] leading-relaxed">
+                      {c.comments}
+                    </p>
                   </div>
                 ))
               ) : (
-                <>
-                  {/* <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
-                  <h1 className='text-4xl font-serif'>Emilie D'Amore</h1>
-                  <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
-                  <p className='text-[#646464] text-[18px]'>Praesentium et odit commodi dolores possimus quisquam <br />expedita ipsum.Voluptas vel vero oficia alias ut.</p>
-                </div>
-                <div className="ml-10 w-[55vw]">
-                  <div className="bg-[#faf7f2] px-15 flex flex-col gap-3 py-5">
-                    <h1 className='text-4xl font-serif'>Katheryn Kerluke</h1>
-                    <h1 className='text-[#646464] text-[14px]'>21-04-2020 at 03:00 PM</h1>
-                    <p className='text-[#646464] text-[18px]'>Sed quo quod aut saepe. Occaecati nobis sit et quia quia impedit debitis culpa. Modi ab omnis nulla.</p>
-                  </div>
-                </div> */}
-                  <p className="font-serif text-3xl text-[#121D27]">
-                    No Comments
-                  </p>
-                </>
+                <p className="font-serif text-xl sm:text-2xl text-[#121D27]">
+                  No comments yet. Be the first to reply!
+                </p>
               )}
             </div>
 
-            <div className="mt-25">
-              <div className="">
-                <h1 className="text-4xl font-serif">Leave a Reply</h1>
-                <p className="text-[#646464] text-[18px]">
+            {/* Leave a Reply Form */}
+            <div className="mt-14 sm:mt-20">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-serif font-semibold">
+                  Leave a Reply
+                </h1>
+                <p className="text-[#646464] text-sm sm:text-[16px] mt-1">
                   Your email address will not be published.
                 </p>
               </div>
-              <div className="py-10">
-                <form action="Comments" onSubmit={commentf}>
+
+              <div className="py-6 sm:py-8">
+                <form onSubmit={commentf} className="space-y-5">
                   <input
                     type="text"
-                    className="w-[55vw] text-xl py-3 border-b border-[#c7c4c4] outline-none"
-                    placeholder="Comments"
+                    className="w-full text-base sm:text-lg py-3 border-b border-[#c7c4c4] outline-none bg-transparent"
+                    placeholder="Comments*"
                     value={Comment}
                     onChange={(e) => setcomment(e.target.value)}
                   />
-                  <div className="flex gap-10">
+
+                  <div className="flex flex-col sm:flex-row gap-5 sm:gap-8">
                     <input
                       type="text"
-                      className="w-[26vw] text-xl py-3 border-b border-[#c7c4c4] outline-none"
+                      className="w-full sm:w-1/2 text-base sm:text-lg py-3 border-b border-[#c7c4c4] outline-none bg-transparent"
                       placeholder="Name*"
                       value={Name}
                       onChange={(e) => setname(e.target.value)}
                     />
                     <input
-                      type="text"
-                      className="w-[26vw] text-xl py-3 border-b border-[#c7c4c4] outline-none"
+                      type="email"
+                      className="w-full sm:w-1/2 text-base sm:text-lg py-3 border-b border-[#c7c4c4] outline-none bg-transparent"
                       placeholder="E-mail*"
                       value={Email}
                       onChange={(e) => setemail(e.target.value)}
                     />
                   </div>
+
                   <button
                     type="submit"
-                    className="border text-zxl w-35 px-3 py-2 mt-10 border-[#121D27] bg-[#121D27] text-[white] hover:bg-[white] hover:text-[#121D27] transition-all duration-300"
+                    className="w-full sm:w-auto border text-base sm:text-lg px-6 sm:px-8 py-3 mt-2 border-[#121D27] bg-[#121D27] text-white hover:bg-white hover:text-[#121D27] transition-all duration-300 cursor-pointer"
                   >
                     Post Comments
                   </button>
@@ -252,120 +256,52 @@ const BDetails = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-2 w-80">
-            <p className="text-xl font-bold">Search</p>
-            <div className=" flex border-2 border-[#a7a4a4] p-2 justify-between items-center px-5">
-              <input type="text" className="" placeholder="Search here.... " />{" "}
-              <IoSearchOutline />
-            </div>
-            <p className="text-xl mt-3 font-bold">Categories</p>
-            <div className="flex items-center">
-              <select className="" name="category" id="category"></select>
-              <p className="border-b w-80 px-3 py-2 text-[19px] border-[#9ca0a4]">
-                American Food
-              </p>
-            </div>
-            <div className="flex items-center">
-              <select className="" name="category" id="category"></select>
-              <p className="border-b w-80 px-3 py-2 text-[19px] border-[#9ca0a4]">
-                Asian Food
-              </p>
-            </div>
-            <div className="flex items-center">
-              <select className="" name="category" id="category"></select>
-              <p className="border-b px-3 w-80 py-2 text-[19px] border-[#9ca0a4]">
-                Mexican Food
-              </p>
-            </div>
-            <div className="flex items-center">
-              <select className="" name="category" id="category"></select>
-              <p className="border-b w-80 px-3 py-2 text-[19px] border-[#9ca0a4]">
-                Birthday Events
-              </p>
-            </div>
-            <div className="flex items-center">
-              <select className="" name="category" id="category"></select>
-              <p className="border-b w-80 px-3 py-2 text-[19px] border-[#9ca0a4]">
-                Wedding Events
-              </p>
+
+          {/* ========== RIGHT SIDEBAR ========== */}
+          <div className="w-full lg:w-80 shrink-0 flex flex-col gap-6 lg:gap-8">
+            {/* Search */}
+            <div>
+              <p className="text-lg sm:text-xl font-bold mb-2">Search</p>
+              <div className="flex border-2 border-[#a7a4a4] p-2.5 sm:p-3 justify-between items-center rounded">
+                <input
+                  type="text"
+                  placeholder="Search here...."
+                  className="outline-none w-full text-sm bg-transparent"
+                />
+                <IoSearchOutline className="text-gray-500 text-lg shrink-0 ml-2" />
+              </div>
             </div>
 
-            <div className="py-10">
-              <p className="text-xl font-bold">Recent Post</p>
-              <div className="flex gap-5 py-6 border-b-2 border-[#c1c1c1]">
-                <div className="">
-                  <img
-                    className="w-30"
-                    src="../src/assets/img/blog_details/bd2.png"
-                    alt="error"
-                  />
-                </div>
-                <div className="text-[19px] ">
-                  <p className="font-sans">
-                    Healthy Cooking Is A <br />
-                    Must For
-                  </p>
-                  <h1 className="text-[#929292] font-sans">17th Jan 2020</h1>
-                </div>
-              </div>
-              <div className="flex gap-5 py-6 border-b-2 border-[#c1c1c1]">
-                <div className="">
-                  <img
-                    className="w-30"
-                    src="../src/assets/img/blog_details/bd4.png"
-                    alt="error"
-                  />
-                </div>
-                <div className="text-[19px] ">
-                  <p className="font-sans">
-                    Gourmet Cooking For
-                    <br />
-                    Pleasure
-                  </p>
-                  <h1 className="text-[#929292] font-sans">15th Jan 2020</h1>
-                </div>
-              </div>
-              <div className="flex gap-5 py-6 border-b-2 border-[#c1c1c1]">
-                <div className="">
-                  <img
-                    className="w-30"
-                    src="../src/assets/img/blog_details/bd3.png"
-                    alt="error"
-                  />
-                </div>
-                <div className="text-[19px] ">
-                  <p className="font-sans">
-                    How To Cook With Fresh <br />
-                    Herbs
-                  </p>
-                  <h1 className="text-[#929292] font-sans">08th Jan 2020</h1>
-                </div>
-              </div>
-              <div className="flex gap-5 py-6">
-                <div className="">
-                  <img
-                    className="w-30"
-                    src="../src/assets/img/blog_details/bd1.png"
-                    alt="error"
-                  />
-                </div>
-                <div className="text-[19px] ">
-                  <p className="font-sans">
-                    Cooking With The Power <br />
-                    Of The
-                  </p>
-                  <h1 className="text-[#929292] font-sans">01th Jan 2020</h1>
-                </div>
+            {/* Categories */}
+            <div>
+              <p className="text-lg sm:text-xl font-bold mb-2">Categories</p>
+              <div className="flex flex-col">
+                {[
+                  "American Food",
+                  "Asian Food",
+                  "Mexican Food",
+                  "Birthday Events",
+                  "Wedding Events",
+                ].map((cat) => (
+                  <div
+                    key={cat}
+                    className="border-b border-[#9ca0a4] px-2 sm:px-3 py-3 text-[15px] sm:text-[17px] text-gray-700 hover:text-[#c5a572] cursor-pointer transition-colors"
+                  >
+                    {cat}
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="">
-              <p className="text-xl font-bold ">Share Blog</p>
-              <p className="flex gap-5 text-2xl mt-7">
-                <FaFacebookF />
-                <FaInstagram />
-                <FaLinkedinIn />
-                <FaTwitter />
-              </p>
+
+            {/* Share Blog */}
+            <div>
+              <p className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Share Blog</p>
+              <div className="flex gap-5 text-xl sm:text-2xl text-[#121D27]">
+                <FaFacebookF className="cursor-pointer hover:text-[#c5a572] transition-colors" />
+                <FaInstagram className="cursor-pointer hover:text-[#c5a572] transition-colors" />
+                <FaLinkedinIn className="cursor-pointer hover:text-[#c5a572] transition-colors" />
+                <FaTwitter className="cursor-pointer hover:text-[#c5a572] transition-colors" />
+              </div>
             </div>
           </div>
         </div>

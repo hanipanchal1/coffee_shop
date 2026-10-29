@@ -6,21 +6,8 @@ import { useAuth } from "../context/AuthContext";
 import { toast } from "../utils/toast";
 
 // ─────────────────────────────────────────────────────────────
-//  Login Page  –  Manual (email/password) + Google OAuth
-//
-//  Manual Login flow:
-//    1. User fills email & password → clicks Submit
-//    2. POST /auth/login  → backend returns { token, user, msg }
-//    3. We call login(token, user) → saves to localStorage + sets state
-//    4. We check user.role:
-//         admin → navigate('/admin')
-//         user  → navigate('/')
-//
-//  Google Login flow:
-//    1. User clicks Google button
-//    2. Browser redirects to http://localhost:1000/google
-//    3. Google handles consent → backend redirects to /auth-success?token=...
-//    4. AuthSuccess.jsx takes over from there
+//  Login Page  –  Fully Responsive (Mobile → Tablet → Desktop)
+//  Desktop design remains identical to original
 // ─────────────────────────────────────────────────────────────
 
 const Login = () => {
@@ -48,12 +35,10 @@ const Login = () => {
 
       const { token, user } = res.data;
 
-      // ✅ Save token in localStorage + set global user state
       login(token, user);
 
       toast.success(res.data.msg || "Logged in successfully!");
 
-      // ✅ Role-based redirect
       if (user?.role === "admin") {
         navigate("/admin", { replace: true });
       } else {
@@ -75,62 +60,127 @@ const Login = () => {
   }
 
   function handleGoogleLogin() {
-    // Google OAuth requires a full browser redirect (NOT axios)
-    // Backend will handle the OAuth flow and redirect back to /auth-success
     window.location.href = "http://localhost:1000/google";
   }
 
   return (
-    <div className="bg-[url('../src/assets/img/menu/bgmenuimg.png')] w-full h-[82.7vh] bg-center bg-cover text-white flex flex-col justify-center items-center gap-5">
-      <p className="text-3xl font-serif">Login!</p>
-      <form
-        onSubmit={handleLogin}
-        className="flex flex-col gap-3 justify-center items-center"
-      >
-        <input
-          className="text-[18px] border-b py-2 w-[30vw] flex px-5 border-[#929292] bg-transparent outline-none"
-          type="email"
-          placeholder="E-mail*"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="text-[18px] border-b py-2 border-[#929292] w-[30vw] flex px-5 bg-transparent outline-none"
-          type="password"
-          placeholder="Password*"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-[#c5a572] w-30 flex items-center justify-center mt-5 py-3 px-6 rounded-xl disabled:opacity-60"
-        >
-          {loading ? "Logging in..." : "Submit"}
-        </button>
+    <div
+className="
+      relative w-full min-h-screen
+      bg-[url('../src/assets/img/menu/bgmenuimg.png')] 
+      bg-center bg-cover bg-no-repeat
+      text-white 
+      flex flex-col justify-center items-center 
+      px-4 sm:px-6 md:px-8
+      py-10 sm:py-12
+    "
+  >
+    {/* Optional dark overlay for better readability */}
+    <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
-        <p className="text-[17px] py-3">
-          Not Registered?{" "}
-          <button
-            type="button"
-            onClick={() => navigate("/register")}
-            className="text-[#c5a572] underline"
-          >
-            Create an account
-          </button>
+    <p className="relative z-10 w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-none flex flex-col items-center gap-5 sm:gap-6">
+          Login!
         </p>
 
-        {/* Google Login Button */}
-        <button
-          type="button"
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#929292] hover:bg-white hover:text-black transition-colors"
-          onClick={handleGoogleLogin}
+        <form
+          onSubmit={handleLogin}
+          className="
+            w-full 
+            flex flex-col gap-4 sm:gap-5 
+            justify-center items-center
+          "
         >
-          <FaGoogle />
-          <span className="text-sm">Login with Google</span>
-        </button>
-      </form>
-    </div>
+          {/* Email Input */}
+          <input
+            className="
+              w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[50vw] lg:w-[30vw]
+              text-base sm:text-[17px] md:text-[18px]
+              border-b 
+              py-2.5 sm:py-2 
+              px-4 sm:px-5
+              bg-transparent outline-none
+              placeholder:text-white/70
+              focus:border-[#c5a572] transition-colors
+            "
+            type="email"
+            placeholder="E-mail*"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+
+          {/* Password Input */}
+          <input
+            className="
+              w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[50vw] lg:w-[30vw]
+              text-base sm:text-[17px] md:text-[18px]
+              border-b 
+              py-2.5 sm:py-2 
+              px-4 sm:px-5
+              bg-transparent outline-none
+              placeholder:text-white/70
+              focus:border-[#c5a572] transition-colors
+            "
+            type="password"
+            placeholder="Password*"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="
+              mt-4 sm:mt-5
+              bg-[#c5a572] 
+              w-full max-w-50 sm:w-32 md:w-30
+              flex items-center justify-center 
+              py-3 px-6 
+              rounded-xl 
+              text-sm sm:text-base
+              font-medium
+              disabled:opacity-60 disabled:cursor-not-allowed
+              hover:bg-[#b8945e] active:scale-[0.98] transition-all
+            "
+          >
+            {loading ? "Logging in..." : "Submit"}
+          </button>
+
+          {/* Register Link */}
+          <p className="text-[15px] sm:text-[16px] md:text-[17px] py-2 sm:py-3 text-center">
+            Not Registered?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="text-[#c5a572] underline hover:text-[#d4b88a] transition-colors"
+            >
+              Create an account
+            </button>
+          </p>
+
+          {/* Google Login Button */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="
+              flex items-center justify-center gap-2 
+              px-5 py-2.5 sm:px-4 sm:py-2
+              rounded-full 
+              bg-[#929292] 
+              hover:bg-white hover:text-black 
+              active:scale-[0.98]
+              transition-all duration-200
+              text-sm sm:text-sm
+              w-full max-w-60 sm:w-auto
+            "
+          >
+            <FaGoogle className="text-base" />
+            <span>Login with Google</span>
+          </button>
+        </form>
+      </div>
   );
 };
 

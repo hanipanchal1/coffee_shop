@@ -78,7 +78,7 @@ const readBlog = async function (req, res) {
     }
 }
 
-const getBlogById = async function (req, res) {
+const readbyIdblog = async function (req, res) {
     try {
         const { id } = req.params
 
@@ -193,4 +193,6 @@ const deleteBlog = async function (req, res) {
     }
 }
 
-module.exports = { createBlog, readBlog, getBlogById, updateBlog, deleteBlog }
+const getBlogById = readbyIdblog
+
+module.exports = { createBlog, readBlog, readbyIdblog, getBlogById, updateBlog, deleteBlog }

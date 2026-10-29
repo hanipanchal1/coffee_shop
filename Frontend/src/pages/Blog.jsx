@@ -33,6 +33,7 @@ const Blog = () => {
       console.error("Error fetching blogs:", error);
     }
   }
+
   const data = [
     {
       img: img1,
@@ -119,32 +120,41 @@ const Blog = () => {
         "Qui magnam iste quibusdam. Voluptas porro optio ipsa ut nihil maxime. Iste omnis impedit quam necessitatibus",
     },
   ];
+
   return (
-    <div>
-      <div className="">
-        <div
-          className="w-full h-100 bg-cover bg-center flex flex-col justify-center items-center gap-3"
-          style={{
-            backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.55),rgb(16, 29, 40,0.90)), url(../src/assets/img/footerbg.png) `,
-          }}
-        >
-          <h1 className="text-[#c5a572] text-5xl font-serif text-extrabold">
-            Our Blogs
-          </h1>
-          <p className="text-[#b9b8b8] text-md">Home/Blogs</p>
-        </div>
+    <div className="overflow-x-hidden">
+      {/* ================= HERO ================= */}
+      <div
+        className="w-full h-64 sm:h-72 md:h-80 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
+        style={{
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/footerbg.png)`,
+        }}
+      >
+        <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">
+          Our Blogs
+        </h1>
+        <p className="text-[#b9b8b8] text-sm sm:text-base">Home / Blogs</p>
       </div>
 
-      <div className="px-25">
-        <div className="mb-10">
-          <ul className="flex justify-between w-[30vw] text-[19px] mt-20  ">
-            <li className="hover:border-b-2">All</li>
-            <li className="hover:border-b-2">Events</li>
-            <li className="hover:border-b-2">Achievement</li>
-            <li className="hover:border-b-2">Latest News</li>
+      {/* ================= CONTENT ================= */}
+      <div className="px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 py-10 sm:py-14 md:py-16">
+        
+        {/* Filter Tabs */}
+        <div className="mb-10 sm:mb-12">
+          <ul className="flex flex-wrap justify-center sm:justify-start gap-x-6 gap-y-3 sm:gap-x-8 text-base sm:text-lg">
+            {["All", "Events", "Achievement", "Latest News"].map((item) => (
+              <li
+                key={item}
+                className="cursor-pointer pb-1 border-b-2 border-transparent hover:border-[#c5a572] hover:text-[#c5a572] transition-all duration-300"
+              >
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3">
+
+        {/* Blog Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
           {(blogs && blogs.length > 0 ? blogs : data).map((item, index) => {
             const blogImage = item.image
               ? item.image.startsWith("http")
@@ -165,12 +175,15 @@ const Blog = () => {
                 date={blogDate}
                 title={item.title}
                 description={item.description}
-                onExplore={() => navigate("/blog/detail")}
+                onExplore={() =>
+                  navigate(item._id ? `/blog/detail/${item._id}` : "/blog/detail")
+                }
               />
             );
           })}
         </div>
       </div>
+
       <Footer />
     </div>
   );

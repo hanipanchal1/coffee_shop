@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { createBlog, readBlog, getBlogById, updateBlog, deleteBlog } = require('../controllers/blog.controllers')
+const { createBlog, readBlog, readbyIdblog, getBlogById, updateBlog, deleteBlog } = require('../controllers/blog.controllers')
 const auth = require('../middlware/auth')
 const admin = require('../middlware/admin')
 
@@ -25,7 +25,8 @@ const upload = multer({ storage: storage })
 
 router.post('/create', auth, admin, upload.any(), createBlog)
 router.get('/read', readBlog)
-router.get('/read/:id', getBlogById)
+router.get('/readbyIdblog/:id', readbyIdblog)
+router.get('/read/:id', readbyIdblog)
 router.put('/update/:id', auth, admin, upload.any(), updateBlog)
 router.delete('/delete/:id', auth, admin, deleteBlog)
 
