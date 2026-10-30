@@ -21,6 +21,7 @@ const navLinks = [
   { label: 'Gallery', to: '/gallery' },
   { label: 'Service', to: '/service' },
   { label: 'Contact', to: '/contact' },
+  { label: 'Blog' , to :'/blog'}
 ];
 
 const Nav = () => {
@@ -33,6 +34,13 @@ const Nav = () => {
     logout();
     setMenuOpen(false);
     navigate('/');
+  }
+
+  function handleNavClick(to) {
+    setMenuOpen(false);
+    if (location.pathname === to) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
   }
 
   function isActive(path) {
@@ -71,7 +79,11 @@ const Nav = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 py-3 flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" className="shrink-0 w-28 sm:w-32 lg:w-36">
+          <Link
+            to="/"
+            onClick={() => handleNavClick('/')}
+            className="shrink-0 w-28 sm:w-32 lg:w-36"
+          >
             <img src={cafeLogo} alt="Oneline Cafe Logo" className="w-full" />
           </Link>
 
@@ -81,6 +93,7 @@ const Nav = () => {
               <Link
                 key={link.to}
                 to={link.to}
+                onClick={() => handleNavClick(link.to)}
                 className={`transition-colors duration-200 hover:text-[#c5a572] pb-0.5 ${
                   isActive(link.to)
                     ? 'text-[#c5a572] border-b-2 border-[#c5a572]'
@@ -93,6 +106,7 @@ const Nav = () => {
             {isAdmin && (
               <Link
                 to="/admin"
+                onClick={() => handleNavClick('/admin')}
                 className={`transition-colors duration-200 hover:text-[#c5a572] pb-0.5 ${
                   isActive('/admin')
                     ? 'text-[#c5a572] border-b-2 border-[#c5a572]'
@@ -150,7 +164,7 @@ const Nav = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                onClick={() => setMenuOpen(false)}
+                onClick={() => handleNavClick(link.to)}
                 className={`py-3 px-3 text-[15px] rounded-md transition-colors duration-200 ${
                   isActive(link.to)
                     ? 'text-[#c5a572] bg-[#1a2d3a] font-semibold'
@@ -163,7 +177,7 @@ const Nav = () => {
             {isAdmin && (
               <Link
                 to="/admin"
-                onClick={() => setMenuOpen(false)}
+                onClick={() => handleNavClick('/admin')}
                 className={`py-3 px-3 text-[15px] rounded-md transition-colors duration-200 ${
                   isActive('/admin')
                     ? 'text-[#c5a572] bg-[#1a2d3a] font-semibold'

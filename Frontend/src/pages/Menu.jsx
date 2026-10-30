@@ -81,7 +81,7 @@ const Menu = () => {
     <div className="overflow-x-hidden">
       {/* ================= HERO ================= */}
       <div
-        className="w-full h-64 sm:h-72 md:h-80 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
+        className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/menu/g4.png)`,
         }}
@@ -216,7 +216,7 @@ const Menu = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-6 lg:h-72">
             
             {/* Left text */}
-            <div className="text-center lg:text-left lg:pr-6 xl:pr-10 flex-shrink-0">
+            <div className="text-center lg:text-left lg:pr-6 xl:pr-10 shrink-0">
               <h1 className="text-[#c5a572] text-2xl sm:text-3xl font-serif">
                 Special Menu
               </h1>
@@ -228,7 +228,7 @@ const Menu = () => {
             </div>
 
             {/* Images */}
-            <div className="flex justify-center gap-3 sm:gap-4 flex-shrink-0">
+            <div className="flex justify-center gap-3 sm:gap-4 shrink-0">
               <img
                 className="w-40 h-48 sm:w-48 sm:h-56 md:w-56 md:h-64 lg:w-64 lg:h-72 object-cover"
                 src="src/assets/img/menu/smi1.png"
@@ -242,7 +242,7 @@ const Menu = () => {
             </div>
 
             {/* Right text */}
-            <div className="text-center lg:text-left lg:pl-6 xl:pl-10 flex-shrink-0">
+            <div className="text-center lg:text-left lg:pl-6 xl:pl-10 shrink-0">
               <h1 className="text-[#c5a572] text-2xl sm:text-3xl font-serif">
                 Coffee Of The Day
               </h1>

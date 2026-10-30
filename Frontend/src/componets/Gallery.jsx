@@ -25,7 +25,7 @@ const Gallery = () => {
         <img
           className="
             w-full 
-            max-w-[260px] 
+            max-w-65 
             h-40 
             sm:h-48 
             md:h-52 
@@ -40,7 +40,7 @@ const Gallery = () => {
         <img
           className="
             w-full 
-            max-w-[260px] 
+            max-w-65 
             h-40 
             sm:h-48 
             md:h-52 
@@ -55,7 +55,7 @@ const Gallery = () => {
         <img
           className="
             w-full 
-            max-w-[260px] 
+            max-w-65 
             h-40 
             sm:h-48 
             md:h-52 
@@ -70,7 +70,7 @@ const Gallery = () => {
         <img
           className="
             w-full 
-            max-w-[260px] 
+            max-w-65 
             h-40 
             sm:h-48 
             md:h-52 

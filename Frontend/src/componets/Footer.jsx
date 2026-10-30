@@ -40,7 +40,7 @@ const Footer = () => {
               alt="Oneline Cafe Logo"
               className="w-28 sm:w-32 lg:w-36"
             />
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 ">
               {[
                 { Icon: FaFacebookF,  label: 'Facebook' },
                 { Icon: FaTwitter,    label: 'Twitter' },
@@ -50,7 +50,7 @@ const Footer = () => {
                 <button
                   key={label}
                   aria-label={label}
-                  className="bg-[#2a3a47] hover:bg-[#c5a572] text-[#949494] hover:text-white transition-all duration-300 text-[17px] p-3 rounded-full"
+                  className="cursor-pointer bg-[#2a3a47] hover:bg-[#c5a572] text-[#949494] hover:text-white transition-all duration-300 text-[17px] p-3 rounded-full"
                 >
                   <Icon />
                 </button>

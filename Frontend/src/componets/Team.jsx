@@ -40,7 +40,7 @@ const Team = () => {
           className="
             w-full 
             max-w-[320px] 
-            sm:max-w-[340px] 
+            sm:max-w-85 
             lg:w-80 
             h-80 
             sm:h-90 
@@ -72,7 +72,7 @@ const Team = () => {
           className="
             w-full 
             max-w-[320px] 
-            sm:max-w-[340px] 
+            sm:max-w-85 
             lg:w-80 
             h-80 
             sm:h-90 
@@ -89,7 +89,7 @@ const Team = () => {
           className="
             w-full 
             max-w-[320px] 
-            sm:max-w-[340px] 
+            sm:max-w-85 
             lg:w-80 
             h-80 
             sm:h-90 

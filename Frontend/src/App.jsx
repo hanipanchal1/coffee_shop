@@ -16,6 +16,7 @@ import AuthSuccess from "./pages/AuthSuccess";
 import Nav from "./componets/Nav";
 import ProtectedRoute from "./componets/ProtectedRoute";
 import ToastNotification from "./componets/ToastNotification";
+import ScrollToTop from "./componets/ScrollToTop";
 
 // ─────────────────────────────────────────────────────────────
 //  App  –  All routes defined here
@@ -28,6 +29,7 @@ import ToastNotification from "./componets/ToastNotification";
 const App = () => {
   return (
     <div>
+      <ScrollToTop />
       <ToastNotification />
       <Nav />
       <Routes>

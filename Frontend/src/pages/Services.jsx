@@ -83,7 +83,7 @@ const Services = () => {
     <div className="overflow-x-hidden">
       {/* ================= HERO ================= */}
       <div
-        className="w-full h-64 sm:h-72 md:h-80 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
+        className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/footerbg.png)`,
         }}
@@ -195,7 +195,7 @@ const Services = () => {
           <span className="text-[#c5a572] font-serif">Successful</span> And
           Prosperous Events!
         </p>
-        <button className="border border-white text-white px-6 py-2.5 text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#101d28] transition-all duration-300">
+        <button className="cursor-pointer border border-white text-white px-6 py-2.5 text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#101d28] transition-all duration-300">
           Read More
         </button>
       </div>

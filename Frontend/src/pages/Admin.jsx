@@ -12,6 +12,7 @@ import {
   MdClose,
   MdAdd,
   MdEdit,
+  MdMenu,
 } from "react-icons/md";
 import {
   FaRegUser,
@@ -37,6 +38,7 @@ const Admin = () => {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -63,6 +65,15 @@ const Admin = () => {
       });
     }
   }, [user, isSettingModalOpen]);
+
+  // Scroll to top whenever tab changes in Admin dashboard
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    const mainEl = document.querySelector("main");
+    if (mainEl) {
+      mainEl.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  }, [activeTab]);
 
   // Tab-specific detailed lists
   const [usersList, setUsersList] = useState([]);
@@ -901,38 +912,92 @@ const Admin = () => {
     navigate("/");
   }
 
+  const navTabs = [
+    {
+      id: "dashboard",
+      label: "Dashboard Overview",
+      shortLabel: "Overview",
+      icon: MdOutlineDashboard,
+      count: null,
+    },
+    {
+      id: "users",
+      label: "Users",
+      shortLabel: "Users",
+      icon: FaRegUser,
+      count: stats.totalUsers,
+    },
+    {
+      id: "bookings",
+      label: "Table Bookings",
+      shortLabel: "Bookings",
+      icon: MdBookmarkAdded,
+      count: stats.totalBookings,
+    },
+    {
+      id: "comments",
+      label: "Comments",
+      shortLabel: "Comments",
+      icon: FaRegComment,
+      count: stats.totalComments,
+    },
+    {
+      id: "menu",
+      label: "Menu Items",
+      shortLabel: "Menu",
+      icon: BiFoodMenu,
+      count: stats.totalMenu,
+    },
+    {
+      id: "blog",
+      label: "Blogs",
+      shortLabel: "Blogs",
+      icon: GrBlog,
+      count: stats.totalBlog,
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] font-sans">
       {/* Top Banner Header */}
-      <div className="w-full bg-[#121d27] border-b border-[#22313f] px-8 py-4 flex justify-between items-center shadow-lg">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#c5a572]/20 border border-[#c5a572] flex items-center justify-center text-[#c5a572] font-serif font-bold text-xl">
-            C
-          </div>
-          <div>
-            <h1 className="text-2xl text-[#c5a572] font-serif font-semibold tracking-wide">
+      <div className="w-full bg-[#121d27] border-b border-[#22313f] px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 shadow-lg">
+        {/* Left: Hamburger (mobile/tablet), Logo Icon & Title */}
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="lg:hidden p-2 rounded-lg bg-[#1a2836] text-[#c5a572] border border-[#c5a572]/30 hover:text-white transition cursor-pointer"
+            aria-label="Toggle navigation menu"
+          >
+            <MdMenu className="text-xl" />
+          </button>
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-2xl text-[#c5a572] font-serif font-semibold tracking-wide truncate">
               Admin Dashboard
             </h1>
-            <p className="text-xs text-gray-400">Coffee House Control Center</p>
+            <p className="text-[10px] sm:text-xs text-gray-400 truncate">
+              Coffee House Control Center
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        {/* Right: Actions, User Info, Logout */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto sm:ml-0">
           <button
             onClick={() => setIsSettingModalOpen(true)}
-            className="flex items-center gap-1.5 text-xs text-[#c5a572] hover:text-white bg-[#1a2836] border border-[#c5a572]/30 px-3 py-1.5 rounded-lg transition cursor-pointer"
+            className="flex items-center gap-1.5 text-xs text-[#c5a572] hover:text-white bg-[#1a2836] border border-[#c5a572]/30 px-2.5 sm:px-3 py-1.5 rounded-lg transition cursor-pointer"
+            title="Settings"
           >
-            <IoSettingsOutline /> Settings
+            <IoSettingsOutline /> <span className="hidden sm:inline">Settings</span>
           </button>
           <button
             onClick={() => fetchTabData(activeTab)}
             title="Refresh Data"
-            className="flex items-center gap-1.5 text-xs text-[#c5a572] hover:text-white bg-[#1a2836] border border-[#c5a572]/30 px-3 py-1.5 rounded-lg transition cursor-pointer"
+            className="flex items-center gap-1.5 text-xs text-[#c5a572] hover:text-white bg-[#1a2836] border border-[#c5a572]/30 px-2.5 sm:px-3 py-1.5 rounded-lg transition cursor-pointer"
           >
-            <MdRefresh className="text-base" /> Refresh
+            <MdRefresh className="text-base" /> <span className="hidden sm:inline">Refresh</span>
           </button>
-          <div className="text-right">
-            <p className="text-sm text-white font-medium">
+          <div className="text-right hidden md:block">
+            <p className="text-sm text-white font-medium max-w-[140px] truncate">
               {user?.name || "Administrator"}
             </p>
             <p className="text-xs text-[#c5a572] uppercase tracking-wider">
@@ -941,112 +1006,145 @@ const Admin = () => {
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-xs bg-red-500/15 text-red-400 border border-red-500/30 px-3.5 py-2 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer"
+            className="flex items-center gap-1.5 text-xs bg-red-500/15 text-red-400 border border-red-500/30 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer"
+            title="Logout"
           >
-            <MdLogout className="text-base" /> Logout
+            <MdLogout className="text-base" /> <span className="hidden sm:inline">Logout</span>
           </button>
         </div>
       </div>
 
-      {/* Main Layout: Left Sidebar + Right Content Area */}
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="w-64 bg-[#F4EEE4] border-r border-[#e3d7c5] flex flex-col justify-between py-6 px-4 shadow-inner">
+      {/* Mobile Quick Horizontal Scrollable Tabs (< lg only) */}
+      <div className="lg:hidden bg-[#16222d] border-b border-[#22313f] px-3 py-2 flex items-center gap-2 overflow-x-auto overflow-y-hidden scrollbar-none">
+        {navTabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition cursor-pointer ${
+                isActive
+                  ? "bg-[#c5a572] text-[#121d27] font-semibold shadow-xs"
+                  : "bg-[#1f2e3d] text-gray-300 hover:text-white hover:bg-[#273a4d]"
+              }`}
+            >
+              <Icon className="text-sm" />
+              <span>{tab.shortLabel}</span>
+              {tab.count !== null && (
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-0.5 ${
+                    isActive
+                      ? "bg-[#121d27] text-[#c5a572]"
+                      : "bg-black/40 text-gray-300"
+                  }`}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Mobile Drawer Backdrop */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-50 lg:hidden backdrop-blur-xs transition-opacity duration-300"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Drawer (Left Slide-In) */}
+      <aside
+        className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-[#F4EEE4] z-50 flex flex-col justify-between py-6 px-4 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden ${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between px-3 mb-2 pb-2 border-b border-[#e3d7c5]">
+            <span className="text-xs font-bold text-[#8a7a6c] uppercase tracking-wider">
+              Menu Navigation
+            </span>
+            <button
+              onClick={() => setMobileSidebarOpen(false)}
+              className="p-1 text-gray-500 hover:text-black rounded-lg hover:bg-[#e7dcce] transition cursor-pointer"
+              title="Close menu"
+            >
+              <MdClose className="text-xl" />
+            </button>
+          </div>
+
+          {navTabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  setMobileSidebarOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
+                  isActive
+                    ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
+                    : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon className="text-lg" /> {tab.label}
+                </div>
+                {tab.count !== null && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 p-3 rounded-xl bg-white/50 border border-[#e3d7c5] text-center text-xs text-[#705e4f]">
+          Logged in as{" "}
+          <strong className="text-[#121d27] block truncate mt-0.5">
+            {user?.email}
+          </strong>
+        </div>
+      </aside>
+
+      {/* Main Layout: Left Sidebar (Desktop) + Right Content Area */}
+      <div className="flex flex-1 min-w-0">
+        {/* Desktop Sidebar (unchanged PC view!) */}
+        <aside className="hidden lg:flex w-64 bg-[#F4EEE4] border-r border-[#e3d7c5] flex-col justify-between py-6 px-4 shadow-inner shrink-0">
           <div className="flex flex-col gap-2">
             <span className="text-[11px] font-bold text-[#8a7a6c] uppercase tracking-wider px-3 mb-1">
               Menu Navigation
             </span>
 
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
-                activeTab === "dashboard"
-                  ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
-                  : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
-              }`}
-            >
-              <MdOutlineDashboard className="text-lg" /> Dashboard Overview
-            </button>
-
-            <button
-              onClick={() => setActiveTab("users")}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
-                activeTab === "users"
-                  ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
-                  : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <FaRegUser className="text-lg" /> Users
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
-                {stats.totalUsers}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("bookings")}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
-                activeTab === "bookings"
-                  ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
-                  : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <MdBookmarkAdded className="text-lg" /> Table Bookings
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
-                {stats.totalBookings}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("comments")}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
-                activeTab === "comments"
-                  ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
-                  : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <FaRegComment className="text-lg" /> Comments
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
-                {stats.totalComments}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("menu")}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
-                activeTab === "menu"
-                  ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
-                  : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <BiFoodMenu className="text-lg" /> Menu Items
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
-                {stats.totalMenu}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("blog")}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
-                activeTab === "blog"
-                  ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
-                  : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <GrBlog className="text-lg" /> Blogs
-              </div>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
-                {stats.totalBlog}
-              </span>
-            </button>
+            {navTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition cursor-pointer ${
+                    isActive
+                      ? "bg-[#121d27] text-[#c5a572] shadow-md font-semibold"
+                      : "text-[#443831] hover:bg-[#e7dcce] hover:text-black"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="text-lg" /> {tab.label}
+                  </div>
+                  {tab.count !== null && (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-white/70 text-gray-700 font-bold">
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div className="mt-8 p-3 rounded-xl bg-white/50 border border-[#e3d7c5] text-center text-xs text-[#705e4f]">
@@ -1056,7 +1154,7 @@ const Admin = () => {
         </aside>
 
         {/* Content Area */}
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
           {/* ══════════════════════════════════════════════════════
               TAB 1: DASHBOARD (TOTAL STATS ON ONE PAGE)
              ══════════════════════════════════════════════════════ */}
@@ -1158,7 +1256,7 @@ const Admin = () => {
               {/* 2 PREVIEWS ON ONE PAGE: Recent Bookings & Comments */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Recent Bookings Preview */}
-                <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
+                <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
                   <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
                     <h4 className="font-serif font-bold text-lg text-[#121d27] flex items-center gap-2">
                       <MdBookmarkAdded className="text-[#c5a572]" /> Recent
@@ -1209,7 +1307,7 @@ const Admin = () => {
                 </div>
 
                 {/* Recent Comments Preview */}
-                <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
+                <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
                   <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-100">
                     <h4 className="font-serif font-bold text-lg text-[#121d27] flex items-center gap-2">
                       <FaRegComment className="text-[#c5a572]" /> Recent
@@ -1276,8 +1374,8 @@ const Admin = () => {
                   </button>
                 )}
               </div>
-              <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
-                <div className="flex justify-between items-center mb-6">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-serif font-bold text-[#121d27]">
                       Registered Users
@@ -1419,7 +1517,7 @@ const Admin = () => {
                   </button>
                 )}
               </div>
-              <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-serif font-bold text-[#121d27]">
@@ -1567,7 +1665,7 @@ const Admin = () => {
                   </button>
                 )}
               </div>
-              <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-serif font-bold text-[#121d27]">
@@ -1683,7 +1781,7 @@ const Admin = () => {
                   </button>
                 )}
               </div>
-              <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-serif font-bold text-[#121d27]">
@@ -1893,7 +1991,7 @@ const Admin = () => {
                 )}
               </div>
 
-              <div className="bg-white rounded-2xl p-6 border border-[#e8dfd3] shadow-sm">
+              <div className="bg-white rounded-2xl p-4 sm:p-6 border border-[#e8dfd3] shadow-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-2xl font-serif font-bold text-[#121d27]">

@@ -78,7 +78,7 @@ const BDetails = () => {
     <div className="min-h-screen">
       {/* Banner */}
       <div
-        className="w-full h-64 sm:h-80 md:h-96 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3 px-4"
+        className="w-full h-64 sm:h-80 md:h-96 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3 px-4"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${footerBg})`,
         }}

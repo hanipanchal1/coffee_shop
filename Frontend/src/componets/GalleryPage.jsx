@@ -5,7 +5,7 @@ const GalleryPage = ({ img, title }) => {
     <div className="w-full group">
       <div className="overflow-hidden">
         {/* Image with consistent aspect ratio */}
-        <div className="aspect-[4/3] w-full overflow-hidden">
+        <div className="aspect-4/3 w-full overflow-hidden">
           <img
             src={img}
             alt={title}
