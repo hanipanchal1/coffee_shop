@@ -273,14 +273,14 @@ const Home = () => {
             <form onSubmit={booking} className="flex flex-col justify-center items-center gap-5 w-full max-w-4xl px-6 sm:px-8">
               <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
                   type="text"
                   placeholder="Name*"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
                   type="email"
                   placeholder="E-mail*"
                   value={email}
@@ -290,14 +290,14 @@ const Home = () => {
 
               <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
                   type="tel"
                   placeholder="Phone*"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
@@ -306,13 +306,13 @@ const Home = () => {
 
               <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
                   type="time"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                 />
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
                   type="number"
                   min="1"
                   placeholder="Seats*"
@@ -322,7 +322,7 @@ const Home = () => {
               </div>
 
               <input
-                className="border-b border-gray-400 w-full text-gray-600 h-12 bg-transparent outline-none focus:border-[#c5a572] transition-colors"
+                className="border-b border-gray-400 w-full text-gray-600 h-12 bg-transparent outline-none transition-colors"
                 type="text"
                 placeholder="Notes*"
                 value={notes}

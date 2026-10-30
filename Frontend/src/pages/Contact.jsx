@@ -86,7 +86,7 @@ const Contact = () => {
                   src="https://maps.google.com/maps?q=Cheyenne%2C%20Wyoming&t=&z=13&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="400"
-                  className="block w-full h-[300px] sm:h-[400px] lg:h-[500px]"
+                  className="block w-full h-75 sm:h-100 lg:h-125"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
@@ -115,12 +115,12 @@ const Contact = () => {
             {/* Name + Email */}
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
               <input
-                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none focus:border-[#c5a572] transition-colors bg-transparent"
+                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none transition-colors bg-transparent"
                 type="text"
                 placeholder="Name*"
               />
               <input
-                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none focus:border-[#c5a572] transition-colors bg-transparent"
+                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none transition-colors bg-transparent"
                 type="email"
                 placeholder="E-mail*"
               />
@@ -129,12 +129,12 @@ const Contact = () => {
             {/* Phone + Subject */}
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
               <input
-                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none focus:border-[#c5a572] transition-colors bg-transparent"
+                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none transition-colors bg-transparent"
                 type="text"
                 placeholder="Phone*"
               />
               <input
-                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none focus:border-[#c5a572] transition-colors bg-transparent"
+                className="border-b border-gray-400 w-full sm:w-1/2 py-2 outline-none transition-colors bg-transparent"
                 type="text"
                 placeholder="Subject*"
               />
@@ -143,7 +143,7 @@ const Contact = () => {
             {/* Notes + Button */}
             <div className="flex flex-col gap-6 sm:gap-8 items-center">
               <input
-                className="border-b border-gray-400 w-full py-2 outline-none focus:border-[#c5a572] transition-colors bg-transparent"
+                className="border-b border-gray-400 w-full py-2 outline-none transition-colors bg-transparent"
                 type="text"
                 placeholder="Notes"
               />
