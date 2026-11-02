@@ -3,6 +3,14 @@ import { FaPlay } from "react-icons/fa6";
 import Team from "../componets/Team";
 import Gallery from "../componets/Gallery";
 import Footer from "../componets/Footer";
+import footerbg from "../assets/img/footerbg.png";
+import outlineIcon from "../assets/img/outline.svg";
+import happinessIcon from "../assets/img/happiness.svg";
+import cheersIcon from "../assets/img/cheers.svg";
+import aboutUsVideo from "../assets/img/about_us_video.png";
+import sp1 from "../assets/img/sp1.png";
+import sp2 from "../assets/img/sp2.png";
+import sp3 from "../assets/img/sp3.png";
 
 const About = () => {
   return (
@@ -17,7 +25,7 @@ const About = () => {
           px-4
         "
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.55), rgb(16, 29, 40,0.90)), url(../src/assets/img/footerbg.png)`,
+          backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.55), rgb(16, 29, 40,0.90)), url(${footerbg})`,
         }}
       >
         <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">
@@ -81,7 +89,7 @@ const About = () => {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-6 lg:gap-0 w-full lg:w-auto">
           {/* Stat 1 */}
           <div className="w-full sm:w-48 lg:w-60 flex flex-col justify-center items-center gap-2 sm:gap-3 border-l-0 lg:border-l border-[#c5a572] h-auto lg:h-40">
-            <img className="w-12 sm:w-13" src="../src/assets/img/outline.svg" alt="Dishes" />
+            <img className="w-12 sm:w-13" src={outlineIcon} alt="Dishes" />
             <h1 className="hover:border-b-2 text-2xl sm:text-3xl font-serif">150</h1>
             <p className="text-[#888888] text-base sm:text-xl font-normal text-center">
               Dishes Menu
@@ -90,7 +98,7 @@ const About = () => {
 
           {/* Stat 2 */}
           <div className="w-full sm:w-48 lg:w-60 flex flex-col justify-center items-center gap-2 sm:gap-3 border-l-0 lg:border-l border-[#c5a572] h-auto lg:h-40">
-            <img className="w-9 sm:w-10" src="../src/assets/img/happiness.svg" alt="Happy Customers" />
+            <img className="w-9 sm:w-10" src={happinessIcon} alt="Happy Customers" />
             <h1 className="hover:border-b-2 text-2xl sm:text-3xl font-serif">2000</h1>
             <p className="text-[#888888] text-base sm:text-xl font-normal text-center">
               Happy Customers
@@ -99,7 +107,7 @@ const About = () => {
 
           {/* Stat 3 */}
           <div className="w-full sm:w-48 lg:w-60 flex flex-col justify-center items-center gap-2 sm:gap-3 border-l-0 lg:border-l border-[#c5a572] h-auto lg:h-40">
-            <img className="w-9 sm:w-10" src="../src/assets/img/cheers.svg" alt="Featured Events" />
+            <img className="w-9 sm:w-10" src={cheersIcon} alt="Featured Events" />
             <h1 className="hover:border-b-2 text-2xl sm:text-3xl font-serif">450</h1>
             <p className="text-[#888888] text-base sm:text-xl font-normal text-center">
               Featured Events
@@ -110,7 +118,7 @@ const About = () => {
 
       {/* ===== Video Section ===== */}
       <div className="px-4 sm:px-6 md:px-10 lg:px-20 xl:px-25 mt-12 sm:mt-16 lg:mt-20">
-        <div className="w-full h-[40vh] sm:h-[50vh] lg:h-[60vh] bg-[url(../src/assets/img/about_us_video.png)] bg-cover bg-center flex items-center justify-center">
+        <div className="w-full h-[40vh] sm:h-[50vh] lg:h-[60vh] bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: `url(${aboutUsVideo})` }}>
           <button className="text-[#c5a572] text-2xl sm:text-3xl bg-white rounded-full w-16 h-16 sm:w-20 sm:h-20 flex justify-center items-center hover:border-8 hover:border-[#888888] transition-all">
             <FaPlay />
           </button>
@@ -128,7 +136,7 @@ const About = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-6 mt-10">
           <div className="text-center flex flex-col gap-3 items-center">
-            <img className="w-full max-w-[360px] lg:w-90 object-cover" src="../src/assets/img/sp1.png" alt="Fine Dining" />
+            <img className="w-full max-w-[360px] lg:w-90 object-cover" src={sp1} alt="Fine Dining" />
             <h1 className="text-2xl sm:text-3xl font-serif mt-4 sm:mt-5">Fine Dining</h1>
             <p className="text-[#888888] text-sm sm:text-base leading-relaxed px-2">
               Alias suscipit iure voluptas ea et et voluptatibus. Animi assumenda libero. At natus id. Perferendis sunt
@@ -136,7 +144,7 @@ const About = () => {
           </div>
 
           <div className="text-center flex flex-col gap-3 items-center">
-            <img className="w-full max-w-[360px] lg:w-90 object-cover" src="../src/assets/img/sp2.png" alt="Spicy Cocktails" />
+            <img className="w-full max-w-[360px] lg:w-90 object-cover" src={sp2} alt="Spicy Cocktails" />
             <h1 className="text-2xl sm:text-3xl font-serif mt-4 sm:mt-5">Spicy Cocktails</h1>
             <p className="text-[#888888] text-sm sm:text-base leading-relaxed px-2">
               Quibusdam quas quae animi tempore est. Ipsum alias beatae enim tempore occaecati alias aut id. Quisquam
@@ -144,7 +152,7 @@ const About = () => {
           </div>
 
           <div className="text-center flex flex-col gap-3 items-center">
-            <img className="w-full max-w-[360px] lg:w-90 object-cover" src="../src/assets/img/sp3.png" alt="Best Veggie" />
+            <img className="w-full max-w-[360px] lg:w-90 object-cover" src={sp3} alt="Best Veggie" />
             <h1 className="text-2xl sm:text-3xl font-serif mt-4 sm:mt-5">Best Veggie</h1>
             <p className="text-[#888888] text-sm sm:text-base leading-relaxed px-2">
               Ut laudantium consectetur. Veritatis rerum reprehenderit qui occaecati quis autem. Animi aut incidunt perferendis

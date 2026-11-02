@@ -1,4 +1,5 @@
 import React from "react";
+import footerbg from "../assets/img/footerbg.png";
 import GalleryPage from "../componets/GalleryPage";
 import img1 from "../assets/img/gallery/g10.png";
 import img2 from "../assets/img/gallery/g3.png";
@@ -43,7 +44,7 @@ const Gallery = () => {
             px-4
           "
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/footerbg.png)`,
+            backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${footerbg})`,
           }}
         >
           <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">

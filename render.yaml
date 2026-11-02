@@ -24,6 +24,13 @@ services:
         sync: false # Optional Google OAuth ID
       - key: GOOGLE_CLIENT_SECRET
         sync: false # Optional Google OAuth Secret
+      # ── Cloudinary (required for image uploads) ──
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false # Your Cloudinary Cloud Name
+      - key: CLOUDINARY_API_KEY
+        sync: false # Your Cloudinary API Key
+      - key: CLOUDINARY_API_SECRET
+        sync: false # Your Cloudinary API Secret
 
   # ─────────────────────────────────────────────────────────────
   #  2. Frontend Static Site (React + Vite + Tailwind)
@@ -42,4 +49,3 @@ services:
     envVars:
       - key: VITE_API_URL
         sync: false # Set to your deployed Backend URL (e.g. https://coffee-shop-backend.onrender.com)
-

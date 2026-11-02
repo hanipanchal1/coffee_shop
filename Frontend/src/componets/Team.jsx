@@ -1,5 +1,8 @@
 import React from "react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa6";
+import team1 from "../assets/img/team1.png";
+import team2 from "../assets/img/team2.png";
+import team3 from "../assets/img/team3.png";
 
 const Team = () => {
   return (
@@ -50,7 +53,7 @@ const Team = () => {
             rounded-sm
           "
           style={{
-            backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.62), rgb(16, 29, 40,0.95)), url(../src/assets/img/team1.png)`,
+            backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.62), rgb(16, 29, 40,0.95)), url(${team1})`,
           }}
         >
           <h1 className="text-white text-xl sm:text-2xl font-serif">
@@ -80,7 +83,7 @@ const Team = () => {
             object-cover
             rounded-sm
           "
-          src="../src/assets/img/team2.png"
+          src={team2}
           alt="Team Member 2"
         />
 
@@ -97,7 +100,7 @@ const Team = () => {
             object-cover
             rounded-sm
           "
-          src="../src/assets/img/team3.png"
+          src={team3}
           alt="Team Member 3"
         />
       </div>

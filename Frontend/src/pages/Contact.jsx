@@ -1,4 +1,5 @@
 import React from "react";
+import footerbg from "../assets/img/footerbg.png";
 import { IoLocationOutline } from "react-icons/io5";
 import { BiPhoneCall } from "react-icons/bi";
 import { MdOutlineEmail } from "react-icons/md";
@@ -17,7 +18,7 @@ const Contact = () => {
           px-4
         "
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.55), rgb(16, 29, 40,0.90)), url(../src/assets/img/footerbg.png)`,
+          backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.55), rgb(16, 29, 40,0.90)), url(${footerbg})`,
         }}
       >
         <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">

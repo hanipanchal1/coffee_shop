@@ -4,30 +4,13 @@ const router = express.Router()
 const { createBlog, readBlog, readbyIdblog, getBlogById, updateBlog, deleteBlog } = require('../controllers/blog.controllers')
 const auth = require('../middlware/auth')
 const admin = require('../middlware/admin')
+const { upload } = require('../middlware/cloudinaryUpload')
 
-const multer = require('multer')
-const path = require('path')
-const crypto = require('crypto')
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads'))
-  },
-  filename: function (req, file, cb) {
-    crypto.randomBytes(16, function (err, raw) {
-      if (err) return cb(err)
-      cb(null, file.fieldname + '-' + raw.toString('hex') + path.extname(file.originalname))
-    })
-  }
-})
-
-const upload = multer({ storage: storage })
-
-router.post('/create', auth, admin, upload.any(), createBlog)
+router.post('/create', auth, admin, upload.single('image'), createBlog)
 router.get('/read', readBlog)
 router.get('/readbyIdblog/:id', readbyIdblog)
 router.get('/read/:id', readbyIdblog)
-router.put('/update/:id', auth, admin, upload.any(), updateBlog)
+router.put('/update/:id', auth, admin, upload.single('image'), updateBlog)
 router.delete('/delete/:id', auth, admin, deleteBlog)
 
 module.exports = router

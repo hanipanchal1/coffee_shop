@@ -128,7 +128,7 @@ const Blog = () => {
       <div
         className="w-full h-64 sm:h-72 md:h-80 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/footerbg.png)`,
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${footerbg})`,
         }}
       >
         <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">

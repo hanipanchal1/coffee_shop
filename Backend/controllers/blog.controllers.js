@@ -1,36 +1,25 @@
-const fs = require('fs')
-const path = require('path')
 const mongoose = require('mongoose')
 const blog = require('../models/blog')
-
-const deleteFileIfExists = (filename) => {
-    if (!filename) return
-    const filePath = path.join(__dirname, '../uploads', filename)
-    if (fs.existsSync(filePath)) {
-        try {
-            fs.unlinkSync(filePath)
-        } catch (err) {
-            console.warn('Could not unlink old image:', filePath, err.message)
-        }
-    }
-}
+const { uploadToCloudinary, deleteFromCloudinary } = require('../middlware/cloudinaryUpload')
 
 const createBlog = async function (req, res) {
     try {
-        const { image, date, title, description } = req.body || {}
+        const { date, title, description } = req.body || {}
 
         if (!title || !description) {
             return res.status(400).json({ msg: "Title and description are required" })
         }
 
-        const uploadedFile = (req.files && req.files.length > 0)
-            ? req.files[0].filename
-            : (req.file ? req.file.filename : (image || null))
+        // Upload image to Cloudinary if a file was sent
+        let imageUrl = null
+        if (req.file && req.file.buffer) {
+            imageUrl = await uploadToCloudinary(req.file.buffer, 'coffee-shop/blogs')
+        }
 
         const userId = req.data?._id || req.data?.id || req.user?._id || req.user?.id
 
         const newBlog = await blog.create({
-            image: uploadedFile,
+            image: imageUrl,
             date: date || Date.now(),
             title: title.trim(),
             description: description.trim(),
@@ -52,7 +41,7 @@ const createBlog = async function (req, res) {
 
 const readBlog = async function (req, res) {
     try {
-        const { search} = req.query || {}
+        const { search } = req.query || {}
         const query = {}
 
         if (search) {
@@ -104,7 +93,7 @@ const readbyIdblog = async function (req, res) {
 const updateBlog = async function (req, res) {
     try {
         const { id } = req.params
-        const { image, date, title, description } = req.body || {}
+        const { date, title, description } = req.body || {}
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ msg: "Invalid Blog ID format" })
@@ -123,25 +112,17 @@ const updateBlog = async function (req, res) {
             return res.status(403).json({ msg: "Unauthorized to update this blog" })
         }
 
-        let uploadedFile = check.image
-        if (req.files && req.files.length > 0) {
-            uploadedFile = req.files[0].filename
-            if (check.image && check.image !== uploadedFile) {
-                deleteFileIfExists(check.image)
-            }
-        } else if (req.file) {
-            uploadedFile = req.file.filename
-            if (check.image && check.image !== uploadedFile) {
-                deleteFileIfExists(check.image)
-            }
-        } else if (image !== undefined && image !== null) {
-            uploadedFile = image
+        // If a new image was uploaded, delete the old one from Cloudinary and upload the new one
+        let imageUrl = check.image
+        if (req.file && req.file.buffer) {
+            await deleteFromCloudinary(check.image)
+            imageUrl = await uploadToCloudinary(req.file.buffer, 'coffee-shop/blogs')
         }
 
         const updatedBlog = await blog.findByIdAndUpdate(
             id,
             {
-                image: uploadedFile,
+                image: imageUrl,
                 date: date || check.date,
                 title: title !== undefined ? title.trim() : check.title,
                 description: description !== undefined ? description.trim() : check.description
@@ -181,8 +162,9 @@ const deleteBlog = async function (req, res) {
             return res.status(403).json({ msg: "Unauthorized to delete this blog" })
         }
 
+        // Delete image from Cloudinary before removing the DB record
         if (check.image) {
-            deleteFileIfExists(check.image)
+            await deleteFromCloudinary(check.image)
         }
 
         const Delete = await blog.findByIdAndDelete(id)

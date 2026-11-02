@@ -1,31 +1,20 @@
-const fs = require('fs')
-const path = require('path')
 const mongoose = require('mongoose')
 const menu = require('../models/menu')
-
-const deleteFileIfExists = (filename) => {
-    if (!filename) return
-    const filePath = path.join(__dirname, '../uploads', filename)
-    if (fs.existsSync(filePath)) {
-        try {
-            fs.unlinkSync(filePath)
-        } catch (err) {
-            console.warn('Could not unlink old image:', filePath, err.message)
-        }
-    }
-}
+const { uploadToCloudinary, deleteFromCloudinary } = require('../middlware/cloudinaryUpload')
 
 const createMenu = async function (req, res) {
     try {
-        const { category, name, description, price, image } = req.body
+        const { category, name, description, price } = req.body
 
         if (!category || !name || !description || !price) {
             return res.status(400).json({ msg: "All fields are required" })
         }
 
-        const uploadedFile = (req.files && req.files.length > 0)
-            ? req.files[0].filename
-            : (req.file ? req.file.filename : (image || null))
+        // Upload image to Cloudinary if a file was sent
+        let imageUrl = null
+        if (req.file && req.file.buffer) {
+            imageUrl = await uploadToCloudinary(req.file.buffer, 'coffee-shop/menu')
+        }
 
         const userId = req.data?._id || req.data?.id || req.user?._id || req.user?.id
 
@@ -34,13 +23,13 @@ const createMenu = async function (req, res) {
             name: name.trim(),
             description: description.trim(),
             price: Number(price),
-            image: uploadedFile,
+            image: imageUrl,
             userId
         })
         await createMenuItem.populate('userId', 'name role')
         res.status(201).json({ msg: "Menu item created successfully", createMenu: createMenuItem, menuItem: createMenuItem })
     } catch (err) {
-        console.error(err)
+        console.error('Create Menu Error:', err)
         res.status(500).json({ message: err.message })
     }
 }
@@ -65,7 +54,7 @@ const readMenu = async function (req, res) {
         const Read = await menu.find(query).populate('userId', 'name role').sort({ createdAt: -1 })
         res.status(200).json({ msg: "Menu List", readMenu: Read, menuItems: Read })
     } catch (err) {
-        console.error(err)
+        console.error('Read Menu Error:', err)
         res.status(500).json({ message: err.message })
     }
 }
@@ -82,7 +71,7 @@ const getMenuById = async function (req, res) {
         }
         res.status(200).json({ msg: "Menu item found", menuItem: item })
     } catch (err) {
-        console.error(err)
+        console.error('Get Menu By ID Error:', err)
         res.status(500).json({ message: err.message })
     }
 }
@@ -90,7 +79,7 @@ const getMenuById = async function (req, res) {
 const updateMenu = async function (req, res) {
     try {
         const { id } = req.params
-        const { category, name, description, price, image } = req.body
+        const { category, name, description, price } = req.body
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ msg: "Invalid Menu item ID format" })
@@ -109,19 +98,11 @@ const updateMenu = async function (req, res) {
             return res.status(403).json({ msg: 'Unauthorized' })
         }
 
-        let uploadedFile = menuItem.image
-        if (req.files && req.files.length > 0) {
-            uploadedFile = req.files[0].filename
-            if (menuItem.image && menuItem.image !== uploadedFile) {
-                deleteFileIfExists(menuItem.image)
-            }
-        } else if (req.file) {
-            uploadedFile = req.file.filename
-            if (menuItem.image && menuItem.image !== uploadedFile) {
-                deleteFileIfExists(menuItem.image)
-            }
-        } else if (image !== undefined && image !== null) {
-            uploadedFile = image
+        // If a new image was uploaded, delete the old one from Cloudinary and upload the new one
+        let imageUrl = menuItem.image
+        if (req.file && req.file.buffer) {
+            await deleteFromCloudinary(menuItem.image)
+            imageUrl = await uploadToCloudinary(req.file.buffer, 'coffee-shop/menu')
         }
 
         const Update = await menu.findByIdAndUpdate(
@@ -131,13 +112,14 @@ const updateMenu = async function (req, res) {
                 name: name !== undefined ? name.trim() : menuItem.name,
                 description: description !== undefined ? description.trim() : menuItem.description,
                 price: price !== undefined ? Number(price) : menuItem.price,
-                image: uploadedFile
+                image: imageUrl
             },
             { new: true }
         ).populate('userId', 'name role')
+
         res.status(200).json({ msg: 'Menu updated successfully', updatedMenu: Update, menuItem: Update })
     } catch (err) {
-        console.error(err)
+        console.error('Update Menu Error:', err)
         res.status(500).json({ message: err.message })
     }
 }
@@ -163,14 +145,15 @@ const deleteMenu = async function (req, res) {
             return res.status(403).json({ msg: 'Unauthorized' })
         }
 
+        // Delete image from Cloudinary before removing the DB record
         if (menuItem.image) {
-            deleteFileIfExists(menuItem.image)
+            await deleteFromCloudinary(menuItem.image)
         }
 
         const Delete = await menu.findByIdAndDelete(id)
         res.status(200).json({ msg: 'Menu deleted successfully', deleteMenu: Delete, menuItem: Delete })
     } catch (err) {
-        console.error(err)
+        console.error('Delete Menu Error:', err)
         res.status(500).json({ message: err.message })
     }
 }

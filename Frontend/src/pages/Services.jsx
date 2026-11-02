@@ -16,6 +16,12 @@ import img5 from "../assets/img/services/ser5.png";
 import icon5 from "../assets/img/services/cheersicon.svg";
 import BookTable from "../componets/BookTable";
 import Footer from "../componets/Footer";
+import footerbg from "../assets/img/footerbg.png";
+import servicesbg from "../assets/img/services/servicesbg.png";
+import sg1 from "../assets/img/services/sg1.png";
+import sg2 from "../assets/img/services/sg2.png";
+import sg3 from "../assets/img/services/sg3.png";
+import sg4 from "../assets/img/services/sg4.png";
 
 const Services = () => {
   const data1 = [
@@ -85,7 +91,7 @@ const Services = () => {
       <div
         className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/footerbg.png)`,
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${footerbg})`,
         }}
       >
         <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">
@@ -186,7 +192,7 @@ const Services = () => {
       <div
         className="w-full py-16 sm:py-20 md:py-24 lg:py-28 bg-cover bg-center flex flex-col justify-center items-center gap-5 sm:gap-6 mt-12 sm:mt-16 md:mt-20 mb-12 sm:mb-16 md:mb-20"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.75), rgba(16, 29, 40, 0.75)), url(../src/assets/img/services/servicesbg.png)`,
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.75), rgba(16, 29, 40, 0.75)), url(${servicesbg})`,
         }}
       >
         <p className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-[30px] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 text-white text-center leading-relaxed max-w-5xl">
@@ -214,22 +220,22 @@ const Services = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
           <img
             className="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover"
-            src="../src/assets/img/services/sg2.png"
+            src={sg2}
             alt="Happy moment 1"
           />
           <img
             className="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover"
-            src="../src/assets/img/services/sg1.png"
+            src={sg1}
             alt="Happy moment 2"
           />
           <img
             className="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover"
-            src="../src/assets/img/services/sg3.png"
+            src={sg3}
             alt="Happy moment 3"
           />
           <img
             className="w-full h-40 sm:h-48 md:h-52 lg:h-56 object-cover"
-            src="../src/assets/img/services/sg4.png"
+            src={sg4}
             alt="Happy moment 4"
           />
         </div>

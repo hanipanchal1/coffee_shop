@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "../utils/toast";
 import { API_BASE_URL } from "../utils/api";
+import bgmenuimg from "../assets/img/menu/bgmenuimg.png";
 
 // ─────────────────────────────────────────────────────────────
 //  Register Page  –  Fully Responsive (Mobile → Tablet → Desktop)
@@ -55,7 +56,7 @@ const Register = () => {
     <div
 className="
     relative w-full min-h-[calc(100vh-70px)]   /* ← changed */
-    bg-[url('../src/assets/img/menu/bgmenuimg.png')]
+    bg-cover bg-center
     bg-center bg-cover bg-no-repeat
     text-white
     flex flex-col justify-center items-center

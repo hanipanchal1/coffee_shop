@@ -1,4 +1,5 @@
 import React from "react";
+import team1Fallback from "../assets/img/team1.png";
 import { useNavigate } from "react-router-dom";
 
 // ─────────────────────────────────────────────────────────────
@@ -16,7 +17,7 @@ const MenuCard = ({ title, bgImage, items = [], onExplore }) => {
   return (
     <div
       className="w-70 h-100 bg-cover bg-center text-white flex flex-col justify-center items-center relative overflow-hidden rounded-lg shadow-xl group hover:scale-105 transition-all duration-300"
-      style={{ backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.62),rgb(16, 29, 40,0.80)), url(${bgImage}), url(../src/assets/img/team1.png)` 
+      style={{ backgroundImage: `linear-gradient(to bottom, rgb(16, 29, 40,0.62),rgb(16, 29, 40,0.80)), url(${bgImage || team1Fallback})` 
      }}
     >
       {/* Dark overlay ensuring text is always crisp and readable over any image */}

@@ -5,6 +5,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "../utils/toast";
 import { API_BASE_URL } from "../utils/api";
+import bgmenuimg from "../assets/img/menu/bgmenuimg.png";
 
 // ─────────────────────────────────────────────────────────────
 //  Login Page  –  Fully Responsive (Mobile → Tablet → Desktop)
@@ -68,7 +69,7 @@ const Login = () => {
     <div
 className="
       relative w-full min-h-screen
-      bg-[url('../src/assets/img/menu/bgmenuimg.png')] 
+      bg-cover bg-center 
       bg-center bg-cover bg-no-repeat
       text-white 
       flex flex-col justify-center items-center 
