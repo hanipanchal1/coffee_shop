@@ -6,6 +6,7 @@ import MenuCard from "../componets/MenuCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../utils/toast";
+import { API_BASE_URL } from "../utils/api";
 
 // ── Asset imports (Vite-safe) ──
 import bgCafe from "../assets/img/bgcafe.png";
@@ -47,7 +48,7 @@ const Home = () => {
 
   async function getmenu() {
     try {
-      const response = await axios.get("http://localhost:1000/menu/read");
+      const response = await axios.get(`${API_BASE_URL}/menu/read`);
       const fetchedMenu = response.data.readMenu || [];
       setMenu(fetchedMenu);
     } catch (error) {
@@ -64,7 +65,7 @@ const Home = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:1000/booking/create", {
+      const res = await axios.post(`${API_BASE_URL}/booking/create`, {
         name,
         email,
         phone,

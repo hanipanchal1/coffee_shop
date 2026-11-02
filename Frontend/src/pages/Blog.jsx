@@ -16,6 +16,7 @@ import img11 from "../assets/img/blog/blogimg1.png";
 import img12 from "../assets/img/blog/blogimg8.png";
 import BlogCard from "../componets/BlogCard";
 import axios from "axios";
+import { API_BASE_URL, getUploadUrl } from "../utils/api";
 
 const Blog = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Blog = () => {
 
   async function fetchBlogs() {
     try {
-      const res = await axios.get("http://localhost:1000/blog/read");
+      const res = await axios.get(`${API_BASE_URL}/blog/read`);
       setBlogs(res.data.readBlog || res.data.blogs || []);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -157,9 +158,7 @@ const Blog = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
           {(blogs && blogs.length > 0 ? blogs : data).map((item, index) => {
             const blogImage = item.image
-              ? item.image.startsWith("http")
-                ? item.image
-                : `http://localhost:1000/uploads/${item.image}`
+              ? getUploadUrl(item.image)
               : item.img || img1;
 
             const blogDate = item.date

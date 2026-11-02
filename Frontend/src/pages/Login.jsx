@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaGoogle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "../utils/toast";
+import { API_BASE_URL } from "../utils/api";
 
 // ─────────────────────────────────────────────────────────────
 //  Login Page  –  Fully Responsive (Mobile → Tablet → Desktop)
@@ -28,7 +29,7 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:1000/auth/login", {
+      const res = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password,
       });
@@ -60,7 +61,7 @@ const Login = () => {
   }
 
   function handleGoogleLogin() {
-    window.location.href = "http://localhost:1000/google";
+    window.location.href = `${API_BASE_URL}/google`;
   }
 
   return (

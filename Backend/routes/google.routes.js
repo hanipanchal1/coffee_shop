@@ -16,17 +16,8 @@ router.get('/google/callback',
                 { expiresIn: '7d' }
             )
 
-            if (process.env.CLIENT_URL) {
-                return res.redirect(`${process.env.CLIENT_URL}/auth-success?token=${token}`)
-            }
-
-            // Direct JSON response in Chrome browser
-            res.json({
-                success: true,
-                message: "Google login successful!",
-                token,
-                user: req.user
-            })
+            const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/+$/, '')
+            return res.redirect(`${clientUrl}/auth-success?token=${token}`)
         } catch (error) {
             console.error('Google login error:', error)
             res.status(500).json({ success: false, message: "Google login failed", error: error.message })
@@ -34,8 +25,8 @@ router.get('/google/callback',
     }        
 )
 
-router.get('/me',auth,(req,res) =>{
-    res.json({success:true, user:req.user})
+router.get('/me', auth, (req, res) => {
+    res.json({ success: true, user: req.user })
 })
 
 module.exports = router

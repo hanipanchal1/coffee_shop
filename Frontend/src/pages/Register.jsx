@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "../utils/toast";
+import { API_BASE_URL } from "../utils/api";
 
 // ─────────────────────────────────────────────────────────────
 //  Register Page  –  Fully Responsive (Mobile → Tablet → Desktop)
@@ -26,7 +27,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:1000/auth/register", {
+      const res = await axios.post(`${API_BASE_URL}/auth/register`, {
         name,
         email,
         password,

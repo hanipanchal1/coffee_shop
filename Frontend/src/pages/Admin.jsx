@@ -28,6 +28,7 @@ import { PiExport } from "react-icons/pi";
 import { IoSearch } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import DeleteConfirmModal from "../componets/DeleteConfirmModal";
+import { API_BASE_URL, getUploadUrl } from "../utils/api";
 
 // ─────────────────────────────────────────────────────────────
 //  Admin Page – Only accessible to users with role='admin'
@@ -117,7 +118,7 @@ const Admin = () => {
     setDeleteModal((prev) => ({ ...prev, loading: true }));
     try {
       if (type === "user") {
-        await axios.delete(`http://localhost:1000/admin/users/${id}`, {
+        await axios.delete(`${API_BASE_URL}/admin/users/${id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
         });
@@ -125,7 +126,7 @@ const Admin = () => {
         fetchTabData("users");
         fetchDashboardStats();
       } else if (type === "menu") {
-        await axios.delete(`http://localhost:1000/menu/delete/${id}`, {
+        await axios.delete(`${API_BASE_URL}/menu/delete/${id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
         });
@@ -133,7 +134,7 @@ const Admin = () => {
         fetchTabData("menu");
         fetchDashboardStats();
       } else if (type === "blog") {
-        await axios.delete(`http://localhost:1000/blog/delete/${id}`, {
+        await axios.delete(`${API_BASE_URL}/blog/delete/${id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
         });
@@ -141,7 +142,7 @@ const Admin = () => {
         fetchTabData("blog");
         fetchDashboardStats();
       } else if (type === "booking") {
-        await axios.delete(`http://localhost:1000/booking/delete/${id}`, {
+        await axios.delete(`${API_BASE_URL}/booking/delete/${id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,
         });
@@ -149,7 +150,7 @@ const Admin = () => {
         fetchTabData("bookings");
         fetchDashboardStats();
       } else if (type === "comment") {
-        await axios.delete(`http://localhost:1000/comment/delete/${id}`, {
+        await axios.delete(`${API_BASE_URL}/comment/delete/${id}`, {
           withCredentials: true,
         });
         toast.success("Comment deleted successfully!");
@@ -339,7 +340,7 @@ const Admin = () => {
       Category: m.category,
       Price: `$${Number(m.price).toFixed(2)}`,
       Description: m.description,
-      Image: m.image ? `http://localhost:1000/uploads/${m.image}` : "No image",
+      Image: m.image ? getUploadUrl(m.image) : "No image",
       "Created Date": m.createdAt
         ? new Date(m.createdAt).toLocaleDateString()
         : "N/A",
@@ -355,7 +356,7 @@ const Admin = () => {
       Date: b.date ? new Date(b.date).toLocaleDateString() : "N/A",
       Author: b.userId?.name || "Admin",
       Description: b.description,
-      Image: b.image ? `http://localhost:1000/uploads/${b.image}` : "No image",
+      Image: b.image ? getUploadUrl(b.image) : "No image",
       "Created Date": b.createdAt
         ? new Date(b.createdAt).toLocaleDateString()
         : "N/A",
@@ -373,7 +374,7 @@ const Admin = () => {
     setUserLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:1000/auth/register",
+        `${API_BASE_URL}/auth/register`,
         newUser,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -414,7 +415,7 @@ const Admin = () => {
     setBookingLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:1000/booking/create",
+        `${API_BASE_URL}/booking/create`,
         newBooking,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -472,7 +473,7 @@ const Admin = () => {
     setSettingLoading(true);
     try {
       const res = await axios.put(
-        "http://localhost:1000/admin/settings",
+        `${API_BASE_URL}/admin/settings`,
         {
           name: settingForm.name.trim(),
           role: settingForm.role,
@@ -531,7 +532,7 @@ const Admin = () => {
     setEditUserLoading(true);
     try {
       const res = await axios.put(
-        `http://localhost:1000/admin/users/${editingUser._id}`,
+        `${API_BASE_URL}/admin/users/${editingUser._id}`,
         {
           name: editUserForm.name.trim(),
           role: editUserForm.role,
@@ -599,7 +600,7 @@ const Admin = () => {
       description: item.description || "",
       imageFile: null,
       imagePreview: item.image
-        ? `http://localhost:1000/uploads/${item.image}`
+        ? getUploadUrl(item.image)
         : "",
     });
     setIsMenuModalOpen(true);
@@ -635,14 +636,14 @@ const Admin = () => {
       if (editingMenuItem) {
         // UPDATE (PUT)
         await axios.put(
-          `http://localhost:1000/menu/update/${editingMenuItem._id}`,
+          `${API_BASE_URL}/menu/update/${editingMenuItem._id}`,
           formData,
           config,
         );
         toast.success("Menu item updated successfully!");
       } else {
         // CREATE (POST)
-        await axios.post("http://localhost:1000/menu/create", formData, config);
+        await axios.post(`${API_BASE_URL}/menu/create`, formData, config);
         toast.success("Menu item created successfully!");
       }
 
@@ -699,7 +700,7 @@ const Admin = () => {
       description: item.description || "",
       imageFile: null,
       imagePreview: item.image
-        ? `http://localhost:1000/uploads/${item.image}`
+        ? getUploadUrl(item.image)
         : "",
     });
     setIsBlogModalOpen(true);
@@ -728,13 +729,13 @@ const Admin = () => {
 
       if (editingBlogItem) {
         await axios.put(
-          `http://localhost:1000/blog/update/${editingBlogItem._id}`,
+          `${API_BASE_URL}/blog/update/${editingBlogItem._id}`,
           formData,
           config,
         );
         toast.success("Blog post updated successfully!");
       } else {
-        await axios.post("http://localhost:1000/blog/create", formData, config);
+        await axios.post(`${API_BASE_URL}/blog/create`, formData, config);
         toast.success("Blog post published successfully!");
       }
 
@@ -778,7 +779,7 @@ const Admin = () => {
       // Try dedicated admin stats endpoint first
       try {
         const res = await axios.get(
-          "http://localhost:1000/admin/stats",
+          `${API_BASE_URL}/admin/stats`,
           config,
         );
         if (res.data?.stats) {
@@ -795,16 +796,16 @@ const Admin = () => {
       // Fallback: Fetch directly from existing routes in parallel
       const [bookRes, commRes, menuRes, blogRes] = await Promise.all([
         axios
-          .get("http://localhost:1000/booking/read", config)
+          .get(`${API_BASE_URL}/booking/read`, config)
           .catch(() => ({ data: { readBooking: [] } })),
         axios
-          .get("http://localhost:1000/comment/read", config)
+          .get(`${API_BASE_URL}/comment/read`, config)
           .catch(() => ({ data: { readComment: [] } })),
         axios
-          .get("http://localhost:1000/menu/read", config)
+          .get(`${API_BASE_URL}/menu/read`, config)
           .catch(() => ({ data: { readMenu: [] } })),
         axios
-          .get("http://localhost:1000/blog/read", config)
+          .get(`${API_BASE_URL}/blog/read`, config)
           .catch(() => ({ data: { readBlog: [] } })),
       ]);
 
@@ -838,27 +839,27 @@ const Admin = () => {
     try {
       if (tab === "users") {
         const res = await axios.get(
-          "http://localhost:1000/admin/users",
+          `${API_BASE_URL}/admin/users`,
           config,
         );
         setUsersList(res.data.users || []);
       } else if (tab === "bookings") {
         const res = await axios.get(
-          "http://localhost:1000/booking/read",
+          `${API_BASE_URL}/booking/read`,
           config,
         );
         setBookingsList(res.data.readBooking || []);
       } else if (tab === "comments") {
         const res = await axios.get(
-          "http://localhost:1000/comment/read",
+          `${API_BASE_URL}/comment/read`,
           config,
         );
         setCommentsList(res.data.readComment || []);
       } else if (tab === "menu") {
-        const res = await axios.get("http://localhost:1000/menu/read", config);
+        const res = await axios.get(`${API_BASE_URL}/menu/read`, config);
         setMenuList(res.data.readMenu || res.data.menuItems || []);
       } else if (tab === "blog") {
-        const res = await axios.get("http://localhost:1000/blog/read", config);
+        const res = await axios.get(`${API_BASE_URL}/blog/read`, config);
         setBlogList(res.data.blogs || res.data.readBlog || []);
       }
     } catch (err) {
@@ -1900,7 +1901,7 @@ const Admin = () => {
                                 <div className="flex items-center gap-3">
                                   {m.image ? (
                                     <img
-                                      src={`http://localhost:1000/uploads/${m.image}`}
+                                      src={getUploadUrl(m.image)}
                                       alt={m.name}
                                       className="w-12 h-12 rounded-xl object-cover border border-[#e8dfd3] shadow-xs"
                                       onError={(e) => {
@@ -2077,7 +2078,7 @@ const Admin = () => {
                                 <div className="flex items-center gap-3">
                                   {b.image ? (
                                     <img
-                                      src={`http://localhost:1000/uploads/${b.image}`}
+                                      src={getUploadUrl(b.image)}
                                       alt={b.title}
                                       className="w-14 h-14 rounded-xl object-cover border border-[#e8dfd3] shadow-xs"
                                       onError={(e) => {

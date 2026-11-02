@@ -6,6 +6,7 @@ import Footer from "../componets/Footer";
 import axios from "axios";
 import { toast } from "../utils/toast";
 import footerBg from "../assets/img/footerbg.png";
+import { API_BASE_URL, getUploadUrl } from "../utils/api";
 
 const BDetails = () => {
   const { id } = useParams();
@@ -28,7 +29,7 @@ const BDetails = () => {
   async function fetchBlogDetails() {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:1000/blog/readbyIdblog/${id}`);
+      const res = await axios.get(`${API_BASE_URL}/blog/readbyIdblog/${id}`);
       setBlogData(res.data.blog);
     } catch (err) {
       console.error("Error fetching blog details:", err);
@@ -40,7 +41,7 @@ const BDetails = () => {
 
   async function fetchComments() {
     try {
-      const res = await axios.get("http://localhost:1000/comment/read");
+      const res = await axios.get(`${API_BASE_URL}/comment/read`);
       setCommentsList(res.data.readComment || []);
     } catch (err) {
       console.error("Error fetching comments:", err);
@@ -54,7 +55,7 @@ const BDetails = () => {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:1000/comment/create", {
+      const res = await axios.post(`${API_BASE_URL}/comment/create`, {
         comments: Comment,
         name: Name,
         email: Email,
@@ -123,11 +124,7 @@ const BDetails = () => {
                 {blogData.image && (
                   <img
                     className="w-full h-56 sm:h-72 md:h-80 lg:h-[60vh] object-cover rounded"
-                    src={
-                      blogData.image.startsWith("http")
-                        ? blogData.image
-                        : `http://localhost:1000/uploads/${blogData.image}`
-                    }
+                    src={getUploadUrl(blogData.image)}
                     alt={blogData.title}
                   />
                 )}
