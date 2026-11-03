@@ -1,4 +1,8 @@
 import React from "react";
+import g4 from "../assets/img/g4.png";
+import G3 from "../assets/img/G3.png";
+import G1 from "../assets/img/G1.png";
+import G2 from "../assets/img/G2.png";
 
 const Gallery = () => {
   return (
@@ -34,7 +38,7 @@ const Gallery = () => {
             object-cover
             rounded-sm
           "
-          src="../src/assets/img/g4.png"
+          src={g4}
           alt="Gallery 1"
         />
         <img
@@ -49,7 +53,7 @@ const Gallery = () => {
             object-cover
             rounded-sm
           "
-          src="../src/assets/img/G3.png"
+          src={G3}
           alt="Gallery 2"
         />
         <img
@@ -64,7 +68,7 @@ const Gallery = () => {
             object-cover
             rounded-sm
           "
-          src="../src/assets/img/G1.png"
+          src={G1}
           alt="Gallery 3"
         />
         <img
@@ -79,7 +83,7 @@ const Gallery = () => {
             object-cover
             rounded-sm
           "
-          src="../src/assets/img/G2.png"
+          src={G2}
           alt="Gallery 4"
         />
       </div>

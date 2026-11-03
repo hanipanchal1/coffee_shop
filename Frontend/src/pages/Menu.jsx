@@ -13,6 +13,9 @@ import mocktailsImg from "../assets/img/menu/menu2.png";
 import icon from "../assets/img/menu/title.png";
 import bgimg from "../assets/img/menu/bgmenuimg.png";
 import icon2 from "../assets/img/menu/title2.png";
+import menuHeroBg from "../assets/img/menu/g4.png";
+import smi1 from "../assets/img/menu/smi1.png";
+import smi2 from "../assets/img/menu/smi2.png";
 import BookTable from "../componets/BookTable";
 
 const categories = [
@@ -83,7 +86,7 @@ const Menu = () => {
       <div
         className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(../src/assets/img/menu/g4.png)`,
+          backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${menuHeroBg})`,
         }}
       >
         <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">
@@ -231,12 +234,12 @@ const Menu = () => {
             <div className="flex justify-center gap-3 sm:gap-4 shrink-0">
               <img
                 className="w-40 h-48 sm:w-48 sm:h-56 md:w-56 md:h-64 lg:w-64 lg:h-72 object-cover"
-                src="src/assets/img/menu/smi1.png"
+                src={smi1}
                 alt="Special menu 1"
               />
               <img
                 className="w-40 h-48 sm:w-48 sm:h-56 md:w-56 md:h-64 lg:w-64 lg:h-72 object-cover"
-                src="src/assets/img/menu/smi2.png"
+                src={smi2}
                 alt="Special menu 2"
               />
             </div>

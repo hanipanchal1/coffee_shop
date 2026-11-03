@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Footer from "../componets/Footer";
 import { useNavigate } from "react-router-dom";
+import footerbg from "../assets/img/footerbg.png";
 
 import img1 from "../assets/img/blog/blogimg3.png";
 import img2 from "../assets/img/blog/blogimg10.png";
