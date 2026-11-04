@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
 
-const {register,login,logout} = require('../controllers/auth.controllers')
+const { register, login, logout } = require('../controllers/auth.controllers')
 const auth = require('../middlware/auth')
+const { authLimiter } = require('../middlware/rateLimiter')
 
-router.post('/register',register)
-router.post('/login',login)
-router.get('/logout',logout)
+// Strict rate limiting on authentication routes (10 attempts / 15 min)
+router.post('/register', authLimiter, register)
+router.post('/login', authLimiter, login)
+router.get('/logout', logout)
 
 module.exports = router

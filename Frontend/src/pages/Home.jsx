@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Team from "../componets/Team";
 import Gallery from "../componets/Gallery";
 import Footer from "../componets/Footer";
 import MenuCard from "../componets/MenuCard";
+import SEO from "../componets/SEO";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../utils/toast";
 import { API_BASE_URL } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
+import { tableBookingSchema } from "../utils/validationSchemas";
 
 // ── Asset imports (Vite-safe) ──
 import bgCafe from "../assets/img/bgcafe.png";
@@ -29,22 +34,42 @@ import lunchImg from "../assets/img/G1.png";
 import breakfastImg from "../assets/img/sp3.png";
 
 const Home = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [seats, setSeats] = useState("");
-  const [notes, setNotes] = useState("");
   const [menu, setMenu] = useState([]);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const { token, user } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(tableBookingSchema),
+    defaultValues: {
+      name:  "",
+      email:  "",
+      phone: "",
+      date: "",
+      time: "",
+      seats: "",
+      notes: "",
+    },
+  });
+
+  // Auto-populate name/email if user logs in or profile loads
+  useEffect(() => {
+    if (user?.name || user?.email) {
+      reset((prev) => ({
+        ...prev,
+        name:  "",
+        email: "",
+      }));
+    }
+  }, [user, reset]);
 
   useEffect(() => {
     getmenu();
   }, []);
-
-  useEffect(() => {
-    console.log("Updated menu state:", menu);
-  }, [menu]);
 
   async function getmenu() {
     try {
@@ -56,33 +81,35 @@ const Home = () => {
     }
   }
 
-  async function booking(e) {
-    e.preventDefault();
-
-    if (!name || !email || !phone || !date || !time || !seats || !notes) {
-      toast.warning("Please fill in all fields.");
-      return;
-    }
-
+  async function onSubmitBooking(data) {
+    setBookingLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/booking/create`, {
-        name,
-        email,
-        phone,
-        date,
-        time,
-        seats: Number(seats),
-        notes,
-      });
+      const res = await axios.post(
+        `${API_BASE_URL}/booking/create`,
+        {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          date: data.date,
+          time: data.time,
+          seats: Number(data.seats),
+          notes: data.notes,
+        },
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
 
-      toast.success(res.data.msg || "Booking created successfully!");
-      setName("");
-      setEmail("");
-      setPhone("");
-      setDate("");
-      setTime("");
-      setSeats("");
-      setNotes("");
+      toast.success(res.data.msg || "Table booked successfully!");
+      reset({
+        name: user?.name || "",
+        email: user?.email || "",
+        phone: "",
+        date: "",
+        time: "",
+        seats: "",
+        notes: "",
+      });
       getmenu();
     } catch (err) {
       console.error(err);
@@ -91,6 +118,8 @@ const Home = () => {
         err.response?.data?.msg ||
         "Failed to submit booking.";
       toast.error(errorMessage);
+    } finally {
+      setBookingLoading(false);
     }
   }
 
@@ -119,6 +148,10 @@ const Home = () => {
 
   return (
     <div className="overflow-x-hidden">
+      <SEO
+        title="Home"
+        description="Feel the authentic handcrafted taste at Coffee Shop. Book a table online or explore our artisanal coffee and dining menus."
+      />
 
       {/* ===================================================================
           HERO SECTION
@@ -271,70 +304,165 @@ const Home = () => {
               <h2 className="text-3xl sm:text-4xl font-serif mt-2">Online Booking</h2>
             </div>
 
-            <form onSubmit={booking} className="flex flex-col justify-center items-center gap-5 w-full max-w-4xl px-6 sm:px-8">
+            <form
+              onSubmit={handleSubmit(onSubmitBooking)}
+              noValidate
+              className="flex flex-col justify-center items-center gap-5 w-full max-w-4xl px-6 sm:px-8"
+            >
+              {/* Row 1: Name & Email */}
               <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
+                <div className="w-full sm:w-1/2 flex flex-col">
+                  <input
+                    {...register("name")}
+                    className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                      errors.name
+                        ? "border-red-500"
+                        : "border-gray-400"
+                    }`}
+                    type="text"
+                    placeholder="Name*"
+                    autoComplete="name"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full sm:w-1/2 flex flex-col">
+                  <input
+                    {...register("email")}
+                    className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                      errors.email
+                        ? "border-red-500"
+                        : "border-gray-400"
+                    }`}
+                    type="email"
+                    placeholder="E-mail*"
+                    autoComplete="email"
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 2: Phone & Date */}
+              <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
+                <div className="w-full sm:w-1/2 flex flex-col">
+                  <input
+                    {...register("phone", {
+                      onChange: (e) => {
+                        e.target.value = e.target.value
+                          .replace(/\D/g, "")
+                          .slice(0, 10);
+                      },
+                    })}
+                    maxLength={10}
+                    inputMode="numeric"
+                    className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                      errors.phone
+                        ? "border-red-500"
+                        : "border-gray-400"
+                    }`}
+                    type="tel"
+                    placeholder="Phone (10 digits)*"
+                    autoComplete="tel"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.phone.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full sm:w-1/2 flex flex-col">
+                  <input
+                    {...register("date")}
+                    min={new Date().toLocaleDateString("en-CA")}
+                    className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                      errors.date
+                        ? "border-red-500"
+                        : "border-gray-400"
+                    }`}
+                    type="date"
+                  />
+                  {errors.date && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.date.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 3: Time & Seats */}
+              <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
+                <div className="w-full sm:w-1/2 flex flex-col">
+                  <input
+                    {...register("time")}
+                    className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                      errors.time
+                        ? "border-red-500"
+                        : "border-gray-400"
+                    }`}
+                    type="time"
+                  />
+                  {errors.time && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.time.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full sm:w-1/2 flex flex-col">
+                  <input
+                    {...register("seats")}
+                    min="1"
+                    max="30"
+                    className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                      errors.seats
+                        ? "border-red-500"
+                        : "border-gray-400"
+                    }`}
+                    type="number"
+                    placeholder="Seats (e.g. 2)*"
+                  />
+                  {errors.seats && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.seats.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 4: Notes */}
+              <div className="w-full flex flex-col">
                 <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
+                  {...register("notes")}
+                  className={`border-b w-full text-gray-700 h-12 bg-transparent outline-none transition-colors ${
+                    errors.notes
+                      ? "border-red-500"
+                      : "border-gray-400"
+                  }`}
                   type="text"
-                  placeholder="Name*"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Notes or special requests (e.g. Window side table)*"
                 />
-                <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
-                  type="email"
-                  placeholder="E-mail*"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                {errors.notes && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.notes.message}
+                  </p>
+                )}
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
-                <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
-                  type="tel"
-                  placeholder="Phone*"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-5 sm:gap-8 w-full">
-                <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
-                  type="time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                />
-                <input
-                  className="border-b border-gray-400 w-full sm:w-1/2 text-gray-600 h-12 bg-transparent outline-none transition-colors"
-                  type="number"
-                  min="1"
-                  placeholder="Seats*"
-                  value={seats}
-                  onChange={(e) => setSeats(e.target.value)}
-                />
-              </div>
-
-              <input
-                className="border-b border-gray-400 w-full text-gray-600 h-12 bg-transparent outline-none transition-colors"
-                type="text"
-                placeholder="Notes*"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
 
               <button
                 type="submit"
-                className="border border-black px-8 py-3 bg-black text-white hover:bg-white hover:text-black transition-all mt-4 cursor-pointer"
+                disabled={bookingLoading}
+                className="border border-black px-8 py-3 bg-black text-white hover:bg-white hover:text-black transition-all mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Book a Table
+                {bookingLoading ? "Booking Table..." : "Book a Table"}
               </button>
             </form>
           </div>

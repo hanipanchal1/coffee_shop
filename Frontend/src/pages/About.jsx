@@ -3,6 +3,7 @@ import { FaPlay } from "react-icons/fa6";
 import Team from "../componets/Team";
 import Gallery from "../componets/Gallery";
 import Footer from "../componets/Footer";
+import SEO from "../componets/SEO";
 import footerbg from "../assets/img/footerbg.png";
 import outlineIcon from "../assets/img/outline.svg";
 import happinessIcon from "../assets/img/happiness.svg";
@@ -15,6 +16,10 @@ import sp3 from "../assets/img/sp3.png";
 const About = () => {
   return (
     <div>
+      <SEO
+        title="About Us"
+        description="Learn about the Coffee Shop journey since 2007, our passionate team of chefs, and our hospitality standards."
+      />
       {/* ===== Hero Banner ===== */}
       <div
         className="
@@ -136,7 +141,7 @@ const About = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-6 mt-10">
           <div className="text-center flex flex-col gap-3 items-center">
-            <img className="w-full max-w-[360px] lg:w-90 object-cover" src={sp1} alt="Fine Dining" />
+            <img className="w-full max-w-90 lg:w-90 object-cover" src={sp1} alt="Fine Dining" />
             <h1 className="text-2xl sm:text-3xl font-serif mt-4 sm:mt-5">Fine Dining</h1>
             <p className="text-[#888888] text-sm sm:text-base leading-relaxed px-2">
               Alias suscipit iure voluptas ea et et voluptatibus. Animi assumenda libero. At natus id. Perferendis sunt
@@ -144,7 +149,7 @@ const About = () => {
           </div>
 
           <div className="text-center flex flex-col gap-3 items-center">
-            <img className="w-full max-w-[360px] lg:w-90 object-cover" src={sp2} alt="Spicy Cocktails" />
+            <img className="w-full max-w-90 lg:w-90 object-cover" src={sp2} alt="Spicy Cocktails" />
             <h1 className="text-2xl sm:text-3xl font-serif mt-4 sm:mt-5">Spicy Cocktails</h1>
             <p className="text-[#888888] text-sm sm:text-base leading-relaxed px-2">
               Quibusdam quas quae animi tempore est. Ipsum alias beatae enim tempore occaecati alias aut id. Quisquam
@@ -152,7 +157,7 @@ const About = () => {
           </div>
 
           <div className="text-center flex flex-col gap-3 items-center">
-            <img className="w-full max-w-[360px] lg:w-90 object-cover" src={sp3} alt="Best Veggie" />
+            <img className="w-full max-w-90 lg:w-90 object-cover" src={sp3} alt="Best Veggie" />
             <h1 className="text-2xl sm:text-3xl font-serif mt-4 sm:mt-5">Best Veggie</h1>
             <p className="text-[#888888] text-sm sm:text-base leading-relaxed px-2">
               Ut laudantium consectetur. Veritatis rerum reprehenderit qui occaecati quis autem. Animi aut incidunt perferendis

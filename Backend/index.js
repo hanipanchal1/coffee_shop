@@ -6,6 +6,7 @@ const cors = require('cors')
 require('dotenv').config()
 const passport = require('passport')
 require('./config/passport')
+const { apiLimiter } = require('./middlware/rateLimiter')
 
 const authRoutes = require('./routes/auth.routes')
 const menuRoutes = require('./routes/menu.routes')
@@ -16,6 +17,9 @@ const google = require('./routes/google.routes')
 const adminRoutes = require('./routes/admin.routes')
 
 connect()
+
+// Trust reverse proxy (Render, Cloudflare, Heroku) for accurate client IP detection in rate limiting
+app.set('trust proxy', 1)
 
 const path = require('path')
 const fs = require('fs')
@@ -31,6 +35,9 @@ app.use(cookieParser())
 app.use(cors({ origin: true, credentials: true }))
 app.use(passport.initialize())
 app.use('/uploads', express.static(uploadsDir))
+
+// Production general API rate limiter (100 req / 15 min per IP)
+app.use(apiLimiter)
 
 // Root health check route for hosting / monitoring
 app.get('/', (req, res) => {

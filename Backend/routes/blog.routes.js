@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { createBlog, readBlog, readbyIdblog, getBlogById, updateBlog, deleteBlog } = require('../controllers/blog.controllers')
+const { createBlog, readBlog, readbyIdblog, updateBlog, deleteBlog } = require('../controllers/blog.controllers')
 const auth = require('../middlware/auth')
 const admin = require('../middlware/admin')
 const { upload } = require('../middlware/cloudinaryUpload')

@@ -16,6 +16,7 @@ import img5 from "../assets/img/services/ser5.png";
 import icon5 from "../assets/img/services/cheersicon.svg";
 import BookTable from "../componets/BookTable";
 import Footer from "../componets/Footer";
+import SEO from "../componets/SEO";
 import footerbg from "../assets/img/footerbg.png";
 import servicesbg from "../assets/img/services/servicesbg.png";
 import sg1 from "../assets/img/services/sg1.png";
@@ -87,6 +88,10 @@ const Services = () => {
 
   return (
     <div className="overflow-x-hidden">
+      <SEO
+        title="Our Services"
+        description="Special event catering, private parties, weddings, and custom culinary experiences hosted at Coffee Shop."
+      />
       {/* ================= HERO ================= */}
       <div
         className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"

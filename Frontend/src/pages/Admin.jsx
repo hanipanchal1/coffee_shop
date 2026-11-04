@@ -3,6 +3,8 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "../utils/toast";
+import SEO from "../componets/SEO";
+import { tableBookingSchema } from "../utils/validationSchemas";
 import {
   MdOutlineDashboard,
   MdBookmarkAdded,
@@ -400,16 +402,12 @@ const Admin = () => {
 
   async function handleAddBooking(e) {
     e.preventDefault();
-    if (
-      !newBooking.name ||
-      !newBooking.email ||
-      !newBooking.phone ||
-      !newBooking.date ||
-      !newBooking.time ||
-      !newBooking.seats ||
-      !newBooking.notes
-    ) {
-      toast.warning("Please fill in all booking fields.");
+    const validation = tableBookingSchema.safeParse(newBooking);
+    if (!validation.success) {
+      const errorMsg =
+        validation.error.errors[0]?.message ||
+        "Please check your booking details.";
+      toast.warning(errorMsg);
       return;
     }
     setBookingLoading(true);
@@ -961,6 +959,10 @@ const Admin = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] font-sans">
       {/* Top Banner Header */}
+      <SEO
+        title="Admin"
+        description="Feel the authentic handcrafted taste at Coffee Shop. Book a table online or explore our artisanal coffee and dining menus."
+      />
       <div className="w-full bg-[#121d27] border-b border-[#22313f] px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 shadow-lg">
         {/* Left: Hamburger (mobile/tablet), Logo Icon & Title */}
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -998,7 +1000,7 @@ const Admin = () => {
             <MdRefresh className="text-base" /> <span className="hidden sm:inline">Refresh</span>
           </button>
           <div className="text-right hidden md:block">
-            <p className="text-sm text-white font-medium max-w-[140px] truncate">
+            <p className="text-sm text-white font-medium max-w-35 truncate">
               {user?.name || "Administrator"}
             </p>
             <p className="text-xs text-[#c5a572] uppercase tracking-wider">
@@ -2542,10 +2544,15 @@ const Admin = () => {
                   <input
                     type="tel"
                     required
-                    placeholder="e.g. +1 234 567 890"
+                    maxLength={10}
+                    inputMode="numeric"
+                    placeholder="e.g. 9876543210 (10 digits)"
                     value={newBooking.phone}
                     onChange={(e) =>
-                      setNewBooking({ ...newBooking, phone: e.target.value })
+                      setNewBooking({
+                        ...newBooking,
+                        phone: e.target.value.replace(/\D/g, "").slice(0, 10),
+                      })
                     }
                     className="w-full bg-white border border-[#e8dfd3] focus:ring-1 focus:ring-[#c5a572] outline-none rounded-xl px-3.5 py-2.5 text-sm transition"
                   />

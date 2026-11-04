@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Footer from "../componets/Footer";
+import SEO from "../componets/SEO";
 import { useNavigate } from "react-router-dom";
 import footerbg from "../assets/img/footerbg.png";
 
@@ -127,11 +128,15 @@ const Blog = () => {
     <div className="overflow-x-hidden">
       {/* ================= HERO ================= */}
       <div
-        className="w-full h-64 sm:h-72 md:h-80 lg:h-[400px] bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
+        className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(16, 29, 40, 0.55), rgba(16, 29, 40, 0.90)), url(${footerbg})`,
         }}
       >
+        <SEO
+        title="Our Blog"
+        description="Feel the authentic handcrafted taste at Coffee Shop. Book a table online or explore our artisanal coffee and dining menus."
+      />
         <h1 className="text-[#c5a572] text-3xl sm:text-4xl md:text-5xl font-serif font-extrabold text-center">
           Our Blogs
         </h1>

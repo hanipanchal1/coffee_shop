@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import errorImg from "../assets/img/error.png";
+import SEO from "../componets/SEO";
 
 const Error = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const Error = () => {
         py-10 sm:py-12
       "
     >
+      <SEO title="404 Not Found" description="The page you are looking for does not exist." />
       {/* Error Image */}
       <img
         className="

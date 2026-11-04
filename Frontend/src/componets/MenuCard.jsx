@@ -29,7 +29,7 @@ const MenuCard = ({ title, bgImage, items = [], onExplore }) => {
         <h2 className="text-sm uppercase tracking-wider text-gray-300">Menu</h2>
 
         <div className="text-[#c9cbcf] flex flex-col justify-center items-center my-3 min-h-35 gap-1">
-          {items.slice(0, 5).map((item, index) => (
+          {items.slice(0, 7).map((item, index) => (
             <p key={index} className="text-sm truncate max-w-55">
               {item}
             </p>

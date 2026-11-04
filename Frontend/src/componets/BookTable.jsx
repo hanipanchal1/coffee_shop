@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 const BookTable = () => {
   const navigate = useNavigate();
   const handleBookTable = () => {
-    navigate("/");
-  }
+    navigate("/#booking");
+  };
   return (
       <div className="mt-20 flex flex-col gap-8">
         <div className="flex flex-col items-center justify-center gap-3">

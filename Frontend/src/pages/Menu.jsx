@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CategoryCard from "../componets/CategoryCard";
 import MenuList from "../componets/MenuList";
 import Footer from "../componets/Footer";
+import SEO from "../componets/SEO";
 
 import startersImg from "../assets/img/menu/menu6.png";
 import breakfastImg from "../assets/img/menu/menu1.png";
@@ -82,6 +83,10 @@ const Menu = () => {
 
   return (
     <div className="overflow-x-hidden">
+      <SEO
+        title="Our Menu"
+        description="Explore our handcrafted coffee brews, starters, breakfast, lunch, desserts, and mocktails at Coffee Shop."
+      />
       {/* ================= HERO ================= */}
       <div
         className="w-full h-64 sm:h-72 md:h-80 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3"

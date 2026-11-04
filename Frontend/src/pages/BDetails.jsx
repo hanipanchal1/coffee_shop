@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter } from "react-icons/fa";
 import Footer from "../componets/Footer";
+import SEO from "../componets/SEO";
 import axios from "axios";
 import { toast } from "../utils/toast";
 import footerBg from "../assets/img/footerbg.png";
@@ -78,6 +79,10 @@ const BDetails = () => {
   return (
     <div className="min-h-screen">
       {/* Banner */}
+      <SEO
+        title="Blog Details"
+        description="Feel the authentic handcrafted taste at Coffee Shop. Book a table online or explore our artisanal coffee and dining menus."
+      />
       <div
         className="w-full h-64 sm:h-80 md:h-96 lg:h-100 bg-cover bg-center flex flex-col justify-center items-center gap-2 sm:gap-3 px-4"
         style={{

@@ -14,6 +14,7 @@ import img10 from "../assets/img/gallery/g7.png";
 import img11 from "../assets/img/gallery/g4.png";
 import img12 from "../assets/img/gallery/g1.png";
 import Footer from "../componets/Footer";
+import SEO from "../componets/SEO";
 
 const Gallery = () => {
   const data = [
@@ -33,6 +34,10 @@ const Gallery = () => {
 
   return (
     <>
+      <SEO
+        title="Gallery"
+        description="Explore photos of our handcrafted drinks, delicious foods, cozy interior, and vibrant events at Coffee Shop."
+      />
       <div className="flex flex-col justify-center items-center w-full overflow-x-hidden">
         {/* ===== Hero Banner ===== */}
         <div
